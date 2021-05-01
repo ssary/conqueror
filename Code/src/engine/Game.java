@@ -1,11 +1,19 @@
 package engine;
+import java.io.IOException;
 import java.util.*;
+
+
 public class Game {
 	private Player player ;
 	private ArrayList<City> availableCities ;
 	private ArrayList<Distance> distances ;
-	private int maxTurnCount ,currentTurnCount;
+	final private int maxTurnCount = 30;
+	private int currentTurnCount = 1;
 	
+	public Game(String playername , String playerCity) throws IOException{
+		player = new Player(playername);
+		
+	}
 	public Player getPlayer() {
 		return player;
 	}
@@ -27,6 +35,8 @@ public class Game {
 	public int getMaxTurnCount() {
 		return maxTurnCount;
 	}
-	
+	public void loadArmy(String cityName,String path) throws IOException{
+		
+	}
 	
 }
