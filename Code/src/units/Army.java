@@ -9,8 +9,11 @@ public class Army {
 	private String currentLocation;
 	private final int maxToHold =10;
 	private  String target;
+	
+	
 	 public  Army (String currentLocation)
 	 {
+		 units = new ArrayList<Unit> () ;
 		 currentStatus = Status.IDLE;
 		 this.currentLocation=currentLocation;
 		 distancetoTarget = -1 ;

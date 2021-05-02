@@ -1,6 +1,6 @@
 package units;
 
-public class Unit {
+abstract public class Unit {
 	private int level ;
 	private int maxSoldierCount ;
 	private int currentSoldierCount;

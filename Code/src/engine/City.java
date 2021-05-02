@@ -53,7 +53,9 @@ public class City{
 	public Army getDefendingArmy() {
 		return defendingArmy;
 	}
-	
+	public void setDefendingArmy(Army m) {
+		this.defendingArmy = m;
+	}
 	
 	
 }
