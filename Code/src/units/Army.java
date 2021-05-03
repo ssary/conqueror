@@ -35,6 +35,7 @@ public class Army {
 	public void setUnits(ArrayList<Unit> units) {
 		this.units = units;
 	}
+	
 	public int getDistancetoTarget() {
 		return distancetoTarget;
 	}

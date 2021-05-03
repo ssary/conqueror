@@ -15,7 +15,7 @@ public class City{
 	public City(String name) {
 		this.name = name ;
 		underSiege = false;
-		
+		//defendingArmy = new Army(name);
 	}
 
 	public String getName() {

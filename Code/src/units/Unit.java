@@ -7,8 +7,6 @@ abstract public class Unit {
 	private double idleUpkeep;
 	private double marchingUpkeep;
 	private double siegeUpkeep;
-	  
-	
 	
 	 public Unit(int level,int maxSoldierCount,double idleUpkeep, double
 			 marchingUpkeep,double siegeUpkeep)
