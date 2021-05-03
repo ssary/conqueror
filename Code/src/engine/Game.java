@@ -1,7 +1,6 @@
 package engine;
 import java.io.IOException;
 import java.util.*;
-import engine.ReadingCSVFile;
 import units.*;
 
 
@@ -21,9 +20,10 @@ public class Game {
 		for(int i =0 ;i<availableCities.size();i++) {
 			City tmp = availableCities.get(i);
 			if(!tmp.getName().equals(playerCity)) {
-				char first = (char) (tmp.getName().charAt(0) + ' ');
+				char first = (char) (tmp.getName().charAt(0) + ' ');//lowercase the first letter
 				String filename = first +  tmp.getName().substring(1) + "_army.csv";
-				loadArmy(tmp.getName() ,"C:\\Users\\saryn\\Desktop\\GIU2\\Second\\CS2\\project\\Code\\src\\csv files\\" + filename);
+				//loadArmy(tmp.getName() ,"C:\\Users\\saryn\\Desktop\\GIU2\\Second\\CS2\\project\\Code\\src\\csv files\\" + filename);
+				loadArmy(tmp.getName() ,"src\\" + filename);
 			}
 		}
 	}
@@ -50,14 +50,15 @@ public class Game {
 	}
 	public void loadArmy(String cityName,String path) throws IOException{
 		
-			ArrayList <String []> soldiers = ReadingCSVFile.readFile(path);
-			ArrayList<Unit> units= new ArrayList<Unit>();
+			ArrayList <String []> soldiers = ReadingCSVFile.readFile(path); // vector of pair of< type , level>
+			ArrayList<Unit> units= new ArrayList<Unit>(); // units ele ha7otaha ll army bta3t el defending city
 			for(int i =0 ;i<soldiers.size();i++) {
 				Unit soldier;
 				String type = soldiers.get(i)[0];
 				String lvl = soldiers.get(i)[1];
+				
+				//Check for types and levels
 				if(type.equals("Archer") ) {
-					
 					if(lvl.equals("1") || lvl.equals("2"))
 						soldier = new Archer(Integer.parseInt(lvl) , 60 , 0.4,0.5,0.6);
 					else 
@@ -70,8 +71,8 @@ public class Game {
 						soldier = new Infantry(Integer.parseInt(lvl) , 60 , 0.6,0.7,0.8);
 				}
 			
-			else {
-				if(lvl.equals("1") )
+			else{
+				if(lvl.equals("1"))
 					soldier = new Cavalry(Integer.parseInt(lvl) , 40 , 0.6 ,0.7 ,0.75);
 				else if(lvl.equals("2"))
 					soldier = new Cavalry(Integer.parseInt(lvl) , 40 , 0.6 ,0.6 ,0.75);
@@ -84,13 +85,14 @@ public class Game {
 			
 			Army army = new Army(cityName);
 			army.setUnits(units);
+			// get the city and add to it the defending army . 
 			for(int i =0 ;i<availableCities.size();i++) {
 				if(cityName.equals(availableCities.get(i).getName())) {
 					availableCities.get(i).setDefendingArmy(army);
 					break;
 				}
 			}
-			//city.setDefendingArmy(//pass the variable);F14G :>
+			//city.setDefendingArmy(//pass the variable);<F14G :I >
 	}
 	
 	private void loadCitiesAndDistances() throws IOException{
