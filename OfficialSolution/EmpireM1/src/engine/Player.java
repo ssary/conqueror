@@ -79,6 +79,9 @@ public class Player {
 		}
 		
 	}
+	//-------------------------------------------------------------------------------------------------------------------------------------
+	
+
 	
 	public void build(String type,String cityName) throws NotEnoughGoldException {
 		City c = new City (cityName);
@@ -86,14 +89,18 @@ public class Player {
 		for(int i =0 ; i < this.controlledCities.size();i++) {
 			if(this.controlledCities.get(i).getName().equals(cityName)) {
 					c = this.controlledCities.get(i) ;
-					if(c.getName().equals(cityName)) {
-						e3ml = false;
-					}
 			}
 		}
-		if(e3ml) {
+		
+		if(true) {
 		if(type == "Market") {
+			for (int i=0;i<c.getEconomicalBuildings().size();i++) {
+				
+				if(c.getEconomicalBuildings().get(i) instanceof Market) {e3ml = false;}
+			}
+			if (e3ml) {
 			Market b = new Market();
+			
 			if(b.getCost() > this.getTreasury())
 				throw new NotEnoughGoldException() ;
 			
@@ -101,25 +108,37 @@ public class Player {
 			this.setTreasury(treasury - b.getCost());
 			b.setCoolDown(true);
 		}
+		}
 		
 		if(type == "Farm") {
+			for (int i=0;i<c.getEconomicalBuildings().size();i++) {
+				
+				if(c.getEconomicalBuildings().get(i) instanceof Farm) {e3ml = false;}
+			}
+			if (e3ml) {
 			Farm b = new Farm();
 			if(b.getCost() > this.getTreasury())
 				throw new NotEnoughGoldException() ;
 			
-			/*for(int i =0 ; i < c.getEconomicalBuildings().size();i++) {
+			//for(int i =0 ; i < c.getEconomicalBuildings().size();i++) {
 				
-				if(c.getEconomicalBuildings().get(i) instanceof Farm) {
+		//		if(c.getEconomicalBuildings().get(i) instanceof Farm) {
 				
-				}
+		//		}
 				
-			}*/
+		//	}
 			c.getEconomicalBuildings().add(b);
 			this.setTreasury(treasury - b.getCost());
 			b.setCoolDown(true);
 		}
+		}
 		
 		if(type == "ArcheryRange") {
+			for (int i=0;i<c.getMilitaryBuildings().size();i++) {
+			
+				if(c.getMilitaryBuildings().get(i) instanceof ArcheryRange) {e3ml = false;}
+			}
+			if (e3ml) {
 			ArcheryRange b = new ArcheryRange();
 			if(b.getCost() > this.getTreasury())
 				throw new NotEnoughGoldException() ;
@@ -128,8 +147,14 @@ public class Player {
 			this.setTreasury(treasury - b.getCost());
 			b.setCoolDown(true);
 		}
+		}
 		
 		if(type == "Barracks") {
+			for (int i=0;i<c.getMilitaryBuildings().size();i++) {
+			
+				if(c.getMilitaryBuildings().get(i) instanceof Barracks) {e3ml = false;}
+			}
+			if (e3ml) {
 			Barracks b = new Barracks();
 			if(b.getCost() > this.getTreasury())
 				throw new NotEnoughGoldException() ;
@@ -138,8 +163,14 @@ public class Player {
 			this.setTreasury(treasury - b.getCost());
 			b.setCoolDown(true);
 		}
+		}
 		
 		if(type == "Stable") {
+			for (int i=0;i<c.getMilitaryBuildings().size();i++) {
+			
+				if(c.getMilitaryBuildings().get(i) instanceof Stable) {e3ml = false;}
+			}
+			if (e3ml) {
 			Stable b = new Stable();
 			if(b.getCost() > this.getTreasury())
 				throw new NotEnoughGoldException() ;
@@ -149,16 +180,25 @@ public class Player {
 			b.setCoolDown(true);
 		}
 		}
+		}
 	}
 	
 	public void upgradeBuilding(Building b) throws NotEnoughGoldException,BuildingInCoolDownException, MaxLevelException{
+		if (b.isCoolDown())
+		throw new 	BuildingInCoolDownException();
+		else {
+			
+		if(b.getLevel()==3) 
+			throw new  MaxLevelException();
+		else {
+			
 		if(b.getUpgradeCost() > treasury) {
 			throw new NotEnoughGoldException();
 		}
 		treasury -= b.getUpgradeCost(); 
 		b.upgrade();
-	}
-	
+		}
+	}}
 	public void initiateArmy(City city,Unit unit) {
 		Army a = new Army(city.getName());
 		a.getUnits().add(unit);
@@ -168,6 +208,7 @@ public class Player {
 	}
 	
 	public void laySiege(Army army,City city) throws TargetNotReachedException,FriendlyCityException{
+		if(!city.isUnderSiege()) {
 		for(int i =0 ; i < controlledCities.size();i++) {
 			if(controlledCities.get(i).getName().equals(city.getName())) {
 				throw new FriendlyCityException();
@@ -180,7 +221,8 @@ public class Player {
 		
 		army.setCurrentStatus(Status.BESIEGING);
 		city.setUnderSiege(true);
-		
+		city.setTurnsUnderSiege(0);
+		}
 	}
 	
 	

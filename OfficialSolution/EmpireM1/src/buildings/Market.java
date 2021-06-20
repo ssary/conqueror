@@ -1,4 +1,4 @@
-package buildings;
+	package buildings;
 
 import exceptions.BuildingInCoolDownException;
 import exceptions.MaxLevelException;

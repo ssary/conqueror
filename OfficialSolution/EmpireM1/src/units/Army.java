@@ -20,9 +20,10 @@ public class Army{
 	public Army(String currentLocation) {
 		this.currentLocation=currentLocation;
 		currentStatus=Status.IDLE;
-		units=new ArrayList<Unit>();
 		distancetoTarget=-1;
 		target="";
+		units=new ArrayList<Unit>();
+		
 	}
 	// The Parent army of the relocated unit < this < army > >  should be changed to the corresponding army
 	public void relocateUnit(Unit unit) throws MaxCapacityException {
@@ -40,10 +41,7 @@ public class Army{
 			//	this.getUnits().set(i, unit.getParentArmy().getUnits().get(i));
 			//}
 			
-			for(int it =0 ; it < unit.getParentArmy().getUnits().size() ; it ++ ) {
-				if(unit.getParentArmy().getUnits().get(it).equals(unit))
-					unit.getParentArmy().getUnits().remove(it);
-			}
+			unit.getParentArmy().getUnits().remove(unit);
 			unit.setParentArmy(this);
 			//this.units.add(unit);
 		/*for(int i =0 ; i <this.units.size();i++){
@@ -77,7 +75,7 @@ public class Army{
 	public void handleAttackedUnit(Unit u) {
 		
 		for(int i= 0 ; i < this.units.size() ; i ++ ) {
-			if(this.units.get(i).equals(u)) {
+			if(this.units.get(i).equals(u) && this.units.get(i).getCurrentSoldierCount()<= 0) {
 				this.units.remove(i);
 			}
 		}
