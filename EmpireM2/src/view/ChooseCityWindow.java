@@ -144,7 +144,7 @@ public class ChooseCityWindow extends JFrame implements ActionListener{
 		return pressed;
 	}
 	
-	public void clearall() {
+	public void 	clearall() {
 		label.setVisible(false);
 		buttonr.setVisible(false);
 		buttonca.setVisible(false);

@@ -21,6 +21,7 @@ public class Control {
 	private String cityname ;
 	
 	
+	
 	public Control() throws IOException {
 	startingwindow = new StartingWindow();
 	if(!startingwindow.isNextwindow()) {
@@ -41,14 +42,18 @@ public class Control {
 	}
 	cityname = choosecity.getChosen();
 	game = new Game(player.getName() ,cityname);
-	choosecity.clearall();
+	choosecity.getContentPane().remove(0);
+	choosecity.repaint();
+	
 	
 	mainwindow = new MainWindow();
 	mainwindow.getname().setText("Player : "+ player.getName() + " " +cityname);
 	player.setTreasury(5000);
 	lnkMainWindow();
-	new WorldMapView();
-	
+	player.getControlledArmies().add(new Army(cityname) );
+	player.getControlledArmies().add(new Army(cityname) );
+	mapview = new WorldMapView(player.getControlledArmies()) ;
+	mapview.setAvailablecities(game.getAvailableCities());
 	}
 
 	public Game getGame() {
@@ -72,6 +77,30 @@ public class Control {
 	
 	public ArrayList<Army> getIdleArmy() {
 		return player.getControlledArmies();
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public StartingWindow getStartingwindow() {
+		return startingwindow;
+	}
+
+	public MainWindow getMainwindow() {
+		return mainwindow;
+	}
+
+	public ChooseCityWindow getChoosecity() {
+		return choosecity;
+	}
+
+	public WorldMapView getMapview() {
+		return mapview;
+	}
+
+	public String getCityname() {
+		return cityname;
 	}
 	
 }
