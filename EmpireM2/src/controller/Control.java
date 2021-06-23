@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import javax.swing.JLabel;
 
+import buildings.EconomicBuilding;
+import buildings.*;
 import engine.*;
 import units.Army;
 import view.*;
@@ -19,7 +21,7 @@ public class Control {
 	private ChooseCityWindow choosecity;
 	private WorldMapView mapview ;
 	private String cityname ;
-	
+	private MyFrame Cityview ;
 	
 	
 	public Control() throws IOException {
@@ -41,6 +43,8 @@ public class Control {
 		System.out.print("");
 	}
 	cityname = choosecity.getChosen();
+	City maincity = new City(cityname);
+	player.getControlledCities().add(maincity);
 	game = new Game(player.getName() ,cityname);
 	choosecity.getContentPane().remove(0);
 	choosecity.repaint();
@@ -54,6 +58,14 @@ public class Control {
 	player.getControlledArmies().add(new Army(cityname) );
 	mapview = new WorldMapView(player.getControlledArmies()) ;
 	mapview.setAvailablecities(game.getAvailableCities());
+	
+	
+	
+	if(cityname.equals("Cairo")) {
+		Cityview = new MyFrame();
+	}
+	
+	
 	}
 
 	public Game getGame() {
