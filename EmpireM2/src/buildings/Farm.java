@@ -25,6 +25,7 @@ public class Farm extends EconomicBuilding {
 		super.upgrade();
 		if(getLevel()==1)
 		{
+			
 			setLevel(2);
 			setUpgradeCost(700);
 		}

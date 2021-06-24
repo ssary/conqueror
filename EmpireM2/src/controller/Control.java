@@ -1,16 +1,20 @@
 package controller;
 
 
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import buildings.EconomicBuilding;
 import buildings.*;
 import engine.*;
+import exceptions.BuildingInCoolDownException;
+import exceptions.MaxLevelException;
 import exceptions.NotEnoughGoldException;
 import units.Army;
 import view.*;
@@ -19,13 +23,19 @@ import view.*;
 public class Control {
 	private Game game ;
 	private Player player ;
+	private JLabel food ;
+	private JLabel money;
+	private JLabel turncount;
+	private JLabel name ;
 	private StartingWindow startingwindow;
 	private MainWindow mainwindow;
 	private ChooseCityWindow choosecity;
 	private WorldMapView mapview ;
 	private String cityname ;
-	private MyFrame Cityview ;
+	private MyFrame maincityview ;
 	private ActionListener farmblistener;
+	private ActionListener farmulistener;
+	private ActionListener marketblistener ;
 	
 	public Control() throws IOException {
 	startingwindow = new StartingWindow();
@@ -38,7 +48,10 @@ public class Control {
 	}
 	
 	player = new Player(startingwindow.getNameText());
-	
+	food = new JLabel();
+	money = new JLabel();
+	turncount = new JLabel();
+	name = new JLabel();
 	startingwindow.dispose();
 	//startingwindow.dispatchEvent(new WindowEvent(startingwindow, WindowEvent.WINDOW_CLOSING));
 	choosecity= new ChooseCityWindow();
@@ -54,53 +67,152 @@ public class Control {
 	
 	
 	mainwindow = new MainWindow();
-	mainwindow.getname().setText("Player : "+ player.getName() + " " +cityname);
+	name.setText("Player : "+ player.getName() + " " +cityname);
+	name.setSize(name.getPreferredSize().width , name.getPreferredSize().height);
+	name.setBounds(1000 , 300 , name.getSize().width , name.getSize().height);
+	food.setText(player.getFood() + "");
+	money.setText("Money : " + player.getTreasury()+"  ");
+	money.setSize(name.getPreferredSize().width , name.getPreferredSize().height);
+	money.setBounds(1000 , 400 , name.getSize().width , name.getSize().height);
+	turncount.setText("Turns : "+ game.getCurrentTurnCount()+"/50  ");
+		
+	
 	player.setTreasury(5000);
 	lnkMainWindow();
 	player.getControlledArmies().add(new Army(cityname) );
-	player.getControlledArmies().add(new Army(cityname) );
+	//player.getControlledArmies().add(new Army(cityname) );
 	mapview = new WorldMapView(player.getControlledArmies()) ;
 	mapview.setAvailablecities(game.getAvailableCities());
-	Cityview = new MyFrame();
+	maincityview = new MyFrame(cityname);
+	maincityview.add(name);
+	farmulistener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			try {
+				lnkfarmu(maincityview.getCityName());
+			}catch (BuildingInCoolDownException e1) {
+				
+				e1.getMessage();
+			} catch (MaxLevelException e1) {
+				
+				e1.getMessage();
+			} catch (NotEnoughGoldException e1) {
+				
+				e1.getMessage();
+			}
+			}
+	};
+	
+	maincityview.getFarm().addActionListener(farmulistener);
+	
 	farmblistener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			try {
-				lnkfarmb();
+				lnkfarmb(maincityview.getCityName());
 			} catch (NotEnoughGoldException e1) {
 				e1.getMessage();
 			}
 		}
 	};
-	Cityview.Getfarmb().addActionListener(farmblistener);
-	}
+	maincityview.Getfarmb().addActionListener(farmblistener);
+	
+	
+	marketblistener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            try {
+                lnkmarketb();
+            } catch (NotEnoughGoldException e1) {
+                e1.getMessage();
+            }
+        }
+    };
+    maincityview.getMarketb().addActionListener(marketblistener);
+    
+    }
 
-	public void lnkfarmb() throws NotEnoughGoldException {
+
+	public void lnkfarmb(String city) throws NotEnoughGoldException {
 		try {
-		player.build("Farm", cityname);
-		Cityview.add(Cityview.getFarm());
-		Cityview.add(Cityview.getFarmpicture());
-		Cityview.getFarml().setVisible(false);
+		if(maincityview.getCityName().equals(city)) {
+		player.build("Farm", city);
+		maincityview.add(maincityview.getFarm());
+		maincityview.add(maincityview.getFarmpicture());
+		maincityview.getFarml().setVisible(false);
 		
-		JLabel tre = new JLabel();
-		tre.setText(""+player.getTreasury());
-		
-		tre.setSize(tre.getPreferredSize().width ,tre.getPreferredSize().height);
-		
-		tre.setBounds(1000 , 100 , tre.getSize().width,tre.getSize().height);
-		Cityview.add(tre);
-		
-		
-		Cityview.getFarmb().setVisible(false);
+		money.setText(""+player.getTreasury());
+		maincityview.getFarmlvl().setText("LVL 1");
+		maincityview.getFarmlvl().setSize(maincityview.getFarmlvl().getPreferredSize().width ,maincityview.getFarmlvl().getPreferredSize().height );
+		maincityview.getFarmlvl().setBounds(150 , 20 , maincityview.getFarmlvl().getSize().width,maincityview.getFarmlvl().getSize().height);
+		maincityview.add(maincityview.getFarmlvl());
+		maincityview.add(money);
 		
 		
-		Cityview.repaint();
+		maincityview.getFarmb().setVisible(false);
 		
+		
+		maincityview.repaint();
+		}
 		}
 		catch(NotEnoughGoldException e) {
 			System.out.println(e.getMessage());
 			
 		}
 		
+	}
+	
+	public void lnkfarmu(String city ) throws BuildingInCoolDownException, MaxLevelException, NotEnoughGoldException {
+		if(maincityview.getCityName().equals(city)) {
+		for(City c : player.getControlledCities()) {
+			if(c.getName().equals(city)) {
+				for(EconomicBuilding b : c.getEconomicalBuildings()) {
+					if(b instanceof Farm) {
+					try {
+					b.setCoolDown(false);
+					player.upgradeBuilding(b);
+					System.out.println("aaaa");
+					maincityview.getFarmlvl().setText("LVL " + b.getLevel());
+					maincityview.add(maincityview.getFarmlvl());
+					maincityview.getFarm().setText("Upgrade " + b.getUpgradeCost());
+					money.setText(""+player.getTreasury());
+					maincityview.add(money);
+					maincityview.repaint();
+					}
+					catch(NotEnoughGoldException e){
+						e.getMessage();
+					}
+					catch(BuildingInCoolDownException e) {
+						e.getMessage();
+					}
+					catch(MaxLevelException e) {
+						e.getMessage();
+					}
+					}
+					}
+			}
+		}
+		}
+	}
+	
+	public void lnkmarketb() throws NotEnoughGoldException {
+        try {
+        
+        player.build("Market", cityname);
+        maincityview.add(maincityview.getMarket());
+        //maincityview.add(maincityview.getMarketpicture());
+        maincityview.getMarl().setVisible(false);
+        money.setText(""+player.getTreasury());
+        maincityview.add(money);
+
+
+        maincityview.getMarketb().setVisible(false);
+
+
+        maincityview.repaint();
+
+        }
+        catch(NotEnoughGoldException e) {
+            System.out.println(e.getMessage());
+
+        }
 	}
 	public Game getGame() {
 		return game;

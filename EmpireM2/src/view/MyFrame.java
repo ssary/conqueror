@@ -27,14 +27,15 @@ import java.io.IOException;
 @SuppressWarnings("serial")
 public class MyFrame extends JFrame implements ActionListener {
 	JButton farm, market , bar,archer, stable ,barr,stabler,archerr,farmb,marketb,barb,stableb,archerb;
-	JLabel farml,marl,barl,arl,stal;
+	JLabel farml,marl,barl,arl,stal, farmlvl;
+	String cityName;
 	//int farmLevel,marketLevel,barLevel,archerLevel,stableLevel;
 	boolean buildfarm = false;
 	int buildcostfarm,buildcostmarket ;
 	ImageIcon myPicture;
 	JLabel farmpicture ;
-	public MyFrame(){
-		 
+	public MyFrame(String cityName){
+		 this.cityName = cityName;
 		 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		 
 		  this.setResizable(false);
@@ -72,6 +73,7 @@ public class MyFrame extends JFrame implements ActionListener {
 		 farmb.setText("build 1000");
 		 farmb.setFocusable(false );
 		
+		 farmlvl = new JLabel();
 		 
 		 
 		 
@@ -88,8 +90,8 @@ public class MyFrame extends JFrame implements ActionListener {
 		  marl.setBounds(350,00,350,350);
 		   market  = new JButton();
 		  market.setBounds(350,250,150,50);  
-		  this.add(market);
-		 market.addActionListener(this);
+		  //this.add(market);
+		 //market.addActionListener(this);
 		 market.setText("upgrade");
 		 market.setFocusable(false ); 
 		 
@@ -99,7 +101,7 @@ public class MyFrame extends JFrame implements ActionListener {
 		 marketb  = new JButton();
 		  marketb.setBounds(350,325,200,50);  
 		  this.add(marketb);
-		 marketb.addActionListener(this);
+		// marketb.addActionListener(this);
 		 marketb.setText("build 1500");
 		 marketb.setFocusable(false );
 		
@@ -218,6 +220,16 @@ public class MyFrame extends JFrame implements ActionListener {
 	}
 	
 	
+		public JLabel getFarmlvl() {
+		return farmlvl;
+	}
+
+
+		public String getCityName() {
+		return cityName;
+	}
+
+
 		@Override
 	public void actionPerformed(ActionEvent e) {
 
