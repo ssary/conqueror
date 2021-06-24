@@ -1,12 +1,17 @@
 package controller;
 
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
 
+import buildings.EconomicBuilding;
+import buildings.*;
 import engine.*;
+import exceptions.NotEnoughGoldException;
 import units.Army;
 import view.*;
 
@@ -19,8 +24,8 @@ public class Control {
 	private ChooseCityWindow choosecity;
 	private WorldMapView mapview ;
 	private String cityname ;
-	
-	
+	private MyFrame Cityview ;
+	private ActionListener farmblistener;
 	
 	public Control() throws IOException {
 	startingwindow = new StartingWindow();
@@ -41,6 +46,8 @@ public class Control {
 		System.out.print("");
 	}
 	cityname = choosecity.getChosen();
+	City maincity = new City(cityname);
+	player.getControlledCities().add(maincity);
 	game = new Game(player.getName() ,cityname);
 	choosecity.getContentPane().remove(0);
 	choosecity.repaint();
@@ -54,8 +61,47 @@ public class Control {
 	player.getControlledArmies().add(new Army(cityname) );
 	mapview = new WorldMapView(player.getControlledArmies()) ;
 	mapview.setAvailablecities(game.getAvailableCities());
+	Cityview = new MyFrame();
+	farmblistener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			try {
+				lnkfarmb();
+			} catch (NotEnoughGoldException e1) {
+				e1.getMessage();
+			}
+		}
+	};
+	Cityview.Getfarmb().addActionListener(farmblistener);
 	}
 
+	public void lnkfarmb() throws NotEnoughGoldException {
+		try {
+		player.build("Farm", cityname);
+		Cityview.add(Cityview.getFarm());
+		Cityview.add(Cityview.getFarmpicture());
+		Cityview.getFarml().setVisible(false);
+		
+		JLabel tre = new JLabel();
+		tre.setText(""+player.getTreasury());
+		
+		tre.setSize(tre.getPreferredSize().width ,tre.getPreferredSize().height);
+		
+		tre.setBounds(1000 , 100 , tre.getSize().width,tre.getSize().height);
+		Cityview.add(tre);
+		
+		
+		Cityview.getFarmb().setVisible(false);
+		
+		
+		Cityview.repaint();
+		
+		}
+		catch(NotEnoughGoldException e) {
+			System.out.println(e.getMessage());
+			
+		}
+		
+	}
 	public Game getGame() {
 		return game;
 	}

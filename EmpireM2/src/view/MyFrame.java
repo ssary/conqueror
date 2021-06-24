@@ -44,6 +44,9 @@ public class MyFrame extends JFrame implements ActionListener {
 		 //-------------------------------------------------------------------------------------------
 		  farml= new JLabel();
 		  myPicture = new ImageIcon("farm.png");
+		  farmpicture = new JLabel();
+		  farmpicture.setBounds(0,0,150,150);
+		  farmpicture.setIcon(myPicture);
 		  
 		  // farml.setHorizontalTextPosition(JLabel.CENTER);
 		  // farml.setVerticalTextPosition(JLabel.TOP);
@@ -57,7 +60,7 @@ public class MyFrame extends JFrame implements ActionListener {
 		  farm  = new JButton();
 		  farm.setBounds(0,150,200,50);  
 		  //this.add(farm);
-		 farm.addActionListener(this);
+		 //farm.addActionListener(this);
 		 farm.setText("upgrade ");
 		 farm.setFocusable(false );
 		 
@@ -65,7 +68,7 @@ public class MyFrame extends JFrame implements ActionListener {
 		 farmb  = new JButton();
 		  farmb.setBounds(0,225,150,50);  
 		  this.add(farmb);
-		 farmb.addActionListener(this);
+		 //farmb.addActionListener(this);
 		 farmb.setText("build 1000");
 		 farmb.setFocusable(false );
 		
@@ -217,18 +220,7 @@ public class MyFrame extends JFrame implements ActionListener {
 	
 		@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource()==farmb)
-		{
-			//build(String type, String cityName);
-			buildfarm = true;
-			add (farm);
-			farmpicture = new JLabel();
-			farmpicture.setBounds(0,0,150,150);
-			farmpicture.setIcon(myPicture);
-			farml.setVisible(false);
-			add (farmpicture);
-			this.getContentPane().repaint();
-		}
+
 		if (e.getSource()==market )
 		{
 			//farm
@@ -255,4 +247,124 @@ public class MyFrame extends JFrame implements ActionListener {
 		public boolean getbuildfarm() {
 			return buildfarm;
 		}
+		
+		public JButton Getfarmb() {
+			return farmb;
+		}
+
+
+		public JButton getFarm() {
+			return farm;
+		}
+
+
+		public JButton getMarket() {
+			return market;
+		}
+
+
+		public JButton getBar() {
+			return bar;
+		}
+
+
+		public JButton getArcher() {
+			return archer;
+		}
+
+
+		public JButton getStable() {
+			return stable;
+		}
+
+
+		public JButton getBarr() {
+			return barr;
+		}
+
+
+		public JButton getStabler() {
+			return stabler;
+		}
+
+
+		public JButton getArcherr() {
+			return archerr;
+		}
+
+
+		public JButton getFarmb() {
+			return farmb;
+		}
+
+
+		public JButton getMarketb() {
+			return marketb;
+		}
+
+
+		public JButton getBarb() {
+			return barb;
+		}
+
+
+		public JButton getStableb() {
+			return stableb;
+		}
+
+
+		public JButton getArcherb() {
+			return archerb;
+		}
+
+
+		public JLabel getFarml() {
+			return farml;
+		}
+
+
+		public JLabel getMarl() {
+			return marl;
+		}
+
+
+		public JLabel getBarl() {
+			return barl;
+		}
+
+
+		public JLabel getArl() {
+			return arl;
+		}
+
+
+		public JLabel getStal() {
+			return stal;
+		}
+
+
+		public boolean isBuildfarm() {
+			return buildfarm;
+		}
+
+
+		public int getBuildcostfarm() {
+			return buildcostfarm;
+		}
+
+
+		public int getBuildcostmarket() {
+			return buildcostmarket;
+		}
+
+
+		public ImageIcon getMyPicture() {
+			return myPicture;
+		}
+
+
+		public JLabel getFarmpicture() {
+			return farmpicture;
+		}
+		
 }
