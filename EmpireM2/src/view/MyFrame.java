@@ -27,7 +27,7 @@ import java.io.IOException;
 @SuppressWarnings("serial")
 public class MyFrame extends JFrame implements ActionListener {
 	JButton farm, market , bar,archer, stable ,barr,stabler,archerr,farmb,marketb,barb,stableb,archerb;
-	JLabel farml,marl,barl,arl,stal, farmlvl;
+	JLabel farml,marl,barl,arl,stal, farmlvl , archerlvl ,marketlvl;
 	String cityName;
 	//int farmLevel,marketLevel,barLevel,archerLevel,stableLevel;
 	boolean buildfarm = false;
@@ -87,7 +87,7 @@ public class MyFrame extends JFrame implements ActionListener {
 		   marl.setFont(new Font("MV Boli",Font.PLAIN,30));
 		   marl.setVisible(true);
 		  this.add(marl);
-		  marl.setBounds(350,00,350,350);
+		  marl.setBounds(350,100,350,350);
 		   market  = new JButton();
 		  market.setBounds(350,250,150,50);  
 		  //this.add(market);
@@ -104,7 +104,7 @@ public class MyFrame extends JFrame implements ActionListener {
 		// marketb.addActionListener(this);
 		 marketb.setText("build 1500");
 		 marketb.setFocusable(false );
-		
+		marketlvl = new JLabel();
 		 
 		 
 		 
@@ -176,7 +176,7 @@ public class MyFrame extends JFrame implements ActionListener {
 		 archerb .addActionListener(this);
 		 archerb .setText("build 1500");
 		 archerb .setFocusable(false );
-		 
+		 archerlvl = new JLabel();
 		 
 		 stal= new JLabel();
 		  stal.setText("stable " );
@@ -378,5 +378,12 @@ public class MyFrame extends JFrame implements ActionListener {
 		public JLabel getFarmpicture() {
 			return farmpicture;
 		}
+		public JLabel getArcherlvl() {
+			return archerlvl;
+		}
+		public JLabel getMarketlvl() {
+			return marketlvl;
+		}
+		
 		
 }

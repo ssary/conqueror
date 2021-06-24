@@ -77,5 +77,9 @@ public class StartingWindow extends JFrame implements ActionListener{
 	public String getNameText() {
 		return name.getText();
 	}
+
+	public JButton getButton() {
+		return button;
+	}
 	
 }

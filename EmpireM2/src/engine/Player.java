@@ -43,9 +43,11 @@ public class Player {
 							|| (type.toLowerCase().equals("infantry") && b instanceof Barracks)) {
 
 						Unit u = b.recruit();
+						System.out.println(treasury);
 						if (treasury < b.getRecruitmentCost())
 							throw new NotEnoughGoldException("Not enough gold");
 						treasury -= b.getRecruitmentCost();
+						
 						u.setParentArmy(c.getDefendingArmy());
 						c.getDefendingArmy().getUnits().add(u);
 					}
@@ -59,6 +61,7 @@ public class Player {
 		for (City c : controlledCities) {
 			if (c.getName().equals(cityName)) {
 				Building b = null;
+				System.out.println(type);
 				switch (type.toLowerCase()) {
 				case "archeryrange":
 					b = new ArcheryRange();

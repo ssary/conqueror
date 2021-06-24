@@ -38,27 +38,38 @@ public class Control {
 	private ActionListener farmulistener;
 	private ActionListener marketblistener ;
 	private ActionListener archerrlistener;
-	public Control() throws IOException {
-	startingwindow = new StartingWindow();
-	if(!startingwindow.isNextwindow()) {
-		JLabel again = new JLabel("enter valid non-empty name ");
-		startingwindow.add(again);
-	}
-	while(!startingwindow.isNextwindow() ) {
-		System.out.print("");
-	}
+	private ActionListener enterlistener;
+	private ActionListener chooselistener;
+	private ActionListener viewmaplistener ;
+	private ActionListener viewcitylistener ;
+	private ActionListener archerblistener;
+	private ActionListener archerulistener;
+	private ActionListener marketulistener;
 	
-	player = new Player(startingwindow.getNameText());
-	food = new JLabel();
-	money = new JLabel();
-	turncount = new JLabel();
-	name = new JLabel();
-	startingwindow.dispose();
+	public Control() throws IOException {
+		
+	// 					Starting window
+	startingwindow = new StartingWindow();
+	enterlistener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			try {
+				lnkenter();
+			} catch (IOException e1) {
+				
+				showMessageDialog(null, e1.getMessage());
+			}}};
+	startingwindow.getButton().addActionListener(enterlistener);
+	
 	//startingwindow.dispatchEvent(new WindowEvent(startingwindow, WindowEvent.WINDOW_CLOSING));
-	choosecity= new ChooseCityWindow();
-	while(!choosecity.getPressed()) {
+	
+	//				Choose City
+	/*while(!choosecity.getPressed()) {
 		System.out.print("");
-	}
+	}*/
+
+
+	
+	/*
 	cityname = choosecity.getChosen();
 	City maincity = new City(cityname);
 	player.getControlledCities().add(maincity);
@@ -80,13 +91,17 @@ public class Control {
 	
 	player.setTreasury(5000);
 	lnkMainWindow();
-	player.getControlledArmies().add(new Army(cityname) );
+	player.getControlledArmies().add(new Army(cityname) );*/
 	//player.getControlledArmies().add(new Army(cityname) );
-	mapview = new WorldMapView(player.getControlledArmies()) ;
-	mapview.setAvailablecities(game.getAvailableCities());
-	maincityview = new MyFrame(cityname);
-	maincityview.add(name);
 	
+	
+	//mapview = new WorldMapView(player.getControlledArmies()) ;
+	//mapview.setAvailablecities(game.getAvailableCities());
+	//maincityview = new MyFrame(cityname);
+	//maincityview.add(name);
+	
+	
+	/*
 	// 					Archer recruit Button Listener
 	archerrlistener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
@@ -148,7 +163,7 @@ public class Control {
     };
     maincityview.getMarketb().addActionListener(marketblistener);
     
-    
+    */
     }
 
 	
@@ -223,6 +238,9 @@ public class Control {
         maincityview.add(maincityview.getMarket());
         //maincityview.add(maincityview.getMarketpicture());
         maincityview.getMarl().setVisible(false);
+        maincityview.getMarketlvl().setText("LVL1");
+        maincityview.getMarketlvl().setBounds(350 , 20 , maincityview.getMarketlvl().getPreferredSize().width,maincityview.getMarketlvl().getPreferredSize().height);
+        maincityview.add(maincityview.getMarketlvl());
         money.setText(""+player.getTreasury());
         maincityview.add(money);
 
@@ -239,10 +257,346 @@ public class Control {
         }
 	}
 	
+	public void lnkmarketu(String city ) throws BuildingInCoolDownException, MaxLevelException, NotEnoughGoldException {
+		if(maincityview.getCityName().equals(city)) {
+		for(City c : player.getControlledCities()) {
+			if(c.getName().equals(city)) {
+				for(EconomicBuilding b : c.getEconomicalBuildings()) {
+					if(b instanceof Market) {
+					try {
+					b.setCoolDown(false);
+					player.upgradeBuilding(b);
+					maincityview.getMarketlvl().setText("LVL " + b.getLevel());
+					maincityview.getMarketlvl().setSize(maincityview.getMarketlvl().getPreferredSize().width ,maincityview.getMarketlvl().getPreferredSize().height  );
+					maincityview.add(maincityview.getMarketlvl());
+					maincityview.getMarket().setText("Upgrade " + b.getUpgradeCost());
+					money.setText(""+player.getTreasury());
+					maincityview.add(money);
+					maincityview.repaint();
+					}
+					catch(NotEnoughGoldException e){
+						
+						showMessageDialog(null, "Not enough gold ");
+					}
+					catch(BuildingInCoolDownException e) {
+						showMessageDialog(null, "build in cooldown");
+					}
+					catch(MaxLevelException e) {
+						showMessageDialog(null, "This building is already lvl 3");
+					}
+					}
+					}
+			}
+		}
+		}
+	}
+		
+		
+	public void lnkarcherb(String city) throws NotEnoughGoldException {
+		try {
+		if(maincityview.getCityName().equals(city)) {
+		player.build("archeryrange", city);
+		showMessageDialog(null, "You built a archeryrange !");
+		maincityview.add(maincityview.getArcher());
+		//maincityview.add(maincityview.getArcherpicture());
+		maincityview.getMarl().setVisible(false);
+
+		money.setText(""+player.getTreasury());
+		maincityview.getArcherlvl().setText("LVL 1");
+		maincityview.getArcherlvl().setSize(maincityview.getArcherlvl().getPreferredSize().width ,maincityview.getArcherlvl().getPreferredSize().height );
+		maincityview.getArcherlvl().setBounds(550 , 450 , maincityview.getArcherlvl().getSize().width,maincityview.getArcherlvl().getSize().height);
+		maincityview.add(maincityview.getArcherlvl());
+		maincityview.add(money);
+
+
+		maincityview.getArcherb().setVisible(false);
+
+
+		maincityview.repaint();
+		}
+		}
+		catch(NotEnoughGoldException e) {
+			showMessageDialog(null,e.getMessage());
+			
+		}
+
+		}
+	
+	public void lnkarcheru(String city ) throws BuildingInCoolDownException, MaxLevelException, NotEnoughGoldException {
+		if(maincityview.getCityName().equals(city)) {
+		for(City c : player.getControlledCities()) {
+			if(c.getName().equals(city)) {
+				for(MilitaryBuilding b : c.getMilitaryBuildings()) {
+					if(b instanceof ArcheryRange) {
+					try {
+					b.setCoolDown(false);
+					player.upgradeBuilding(b);
+				System.out.println("upgrade archer");
+					maincityview.getArcherlvl().setText("LVL " + b.getLevel());
+					maincityview.add(maincityview.getArcherlvl());
+					maincityview.getArcher().setText("Upgrade " + b.getUpgradeCost());
+					money.setText(""+player.getTreasury());
+					maincityview.add(money);
+					maincityview.repaint();
+					}
+					catch(NotEnoughGoldException e){
+						
+						showMessageDialog(null, "Not enough gold ");
+					}
+					catch(BuildingInCoolDownException e) {
+						showMessageDialog(null, "build in cooldown");
+					}
+					catch(MaxLevelException e) {
+						showMessageDialog(null, "This building is already lvl 3");
+					}
+					}
+					}
+			}
+		}
+		}
+		}
 	public void lnkarcherr(String city) throws BuildingInCoolDownException, MaxRecruitedException, NotEnoughGoldException {
 		
 		player.recruitUnit("archer", city);
+		money.setText("Money : " + player.getTreasury());
+		maincityview.add(money);
+		maincityview.repaint();
 		showMessageDialog(null, "You rectuited an archer !");
+	}
+	
+	public void lnkenter() throws IOException {
+		
+		if(startingwindow.getNameText().equals("")) {
+			showMessageDialog(null, "enter a valid name < non empty >");
+		}
+		else {
+		player = new Player(startingwindow.getNameText());
+		food = new JLabel();
+		money = new JLabel();
+		turncount = new JLabel();
+		name = new JLabel();
+		choosecity= new ChooseCityWindow();
+		startingwindow.dispose();
+		
+		chooselistener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//lnkchoose();
+				if(e.getSource() == choosecity.getRome()) {
+					try {
+						pickedcity("Rome");
+					} catch (IOException e1) {
+						
+						showMessageDialog(null,e1.getMessage());
+					}
+				}
+				if(e.getSource() == choosecity.getCairo()) {
+					try {
+						pickedcity("Cairo");
+					} catch (IOException e1) {
+						
+						showMessageDialog(null,e1.getMessage());
+					}
+				}
+				if(e.getSource() == choosecity.getSparta()) {
+					try {
+						pickedcity("Sparta");
+					} catch (IOException e1) {
+						
+						showMessageDialog(null,e1.getMessage());
+					}
+				}
+			}
+		};
+		
+		choosecity.getRome().addActionListener(chooselistener);
+		choosecity.getCairo().addActionListener(chooselistener);
+		choosecity.getSparta().addActionListener(chooselistener);
+
+		System.out.println("ok");
+		}
+	}
+	
+	public void pickedcity(String s) throws IOException {
+		
+		cityname = s;
+		City maincity = new City(cityname);
+		player.getControlledCities().add(maincity);
+		game = new Game(player.getName() ,cityname);
+		choosecity.dispose();
+		lnkopenmainwindow();
+		
+	}
+	public void lnkopenmainwindow()  {
+		
+		mainwindow = new MainWindow();
+		name.setText("Player : "+ player.getName() + " " +cityname);
+		name.setSize(name.getPreferredSize().width , name.getPreferredSize().height);
+		name.setBounds(1000 , 300 , name.getSize().width , name.getSize().height);
+		food.setText(player.getFood() + "");
+		money.setText("Money : " + player.getTreasury()+"  ");
+		money.setSize(name.getPreferredSize().width , name.getPreferredSize().height);
+		money.setBounds(1000 , 400 , name.getSize().width , name.getSize().height);
+		turncount.setText("Turns : "+ game.getCurrentTurnCount()+"/50  ");
+		
+		player.setTreasury(5000);
+		
+		lnkMainWindow();
+		player.getControlledArmies().add(new Army(cityname) );
+		/*try {
+		player.build("ArcheryRange", cityname);
+		player.getControlledCities().get(0).getMilitaryBuildings().get(0).setCoolDown(false);}
+		catch(NotEnoughGoldException e) {
+			showMessageDialog(null, e.getMessage());
+		}*/
+		viewmaplistener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewmap();
+			}
+		};
+		mainwindow.getMap().addActionListener(viewmaplistener);
+	}
+	
+	public void viewmap() {
+		mapview = new WorldMapView(player.getControlledArmies()) ;
+		mapview.setAvailablecities(game.getAvailableCities());
+		viewcitylistener = new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				ArrayList <String > ava = new ArrayList <String >();
+				for(City c : player.getControlledCities()) {
+					ava.add(c.getName());
+				}
+				if(e.getSource() == mapview.getRome() && ava.contains("Rome"))
+					viewcity("rome");
+				else if(e.getSource() == mapview.getCairo() && ava.contains("Cairo"))
+					viewcity("cairo");
+				else if(e.getSource() == mapview.getSparta() && ava.contains("Sparta"))
+					viewcity("sparta");
+			}
+			
+		};
+		mapview.getCairo().addActionListener(viewcitylistener);
+		mapview.getRome().addActionListener(viewcitylistener);
+		mapview.getSparta().addActionListener(viewcitylistener);
+	}
+	
+	
+	public void viewcity(String cityn) {
+		maincityview = new MyFrame(cityname);
+		maincityview.add(name);
+		
+		//				 Archer build
+		archerblistener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					lnkarcherb(maincityview.getCityName());
+				} catch (NotEnoughGoldException e1) {
+					showMessageDialog(null,e1.getMessage());
+				}
+			}
+			};
+			maincityview.getArcherb().addActionListener(archerblistener);
+			
+		//			Archer Recruit
+		archerrlistener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					lnkarcherr(maincityview.getCityName());
+				}catch (BuildingInCoolDownException e1) {
+					
+					showMessageDialog(null, e1.getMessage());
+				} catch (NotEnoughGoldException e1) {
+					
+					showMessageDialog(null, e1.getMessage());
+				} catch (MaxRecruitedException e1) {
+					showMessageDialog(null,e1.getMessage());
+				}
+				}
+		};
+		maincityview.getArcherr().addActionListener(archerrlistener);
+		
+		//						Farm upgrade Listener
+		farmulistener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					lnkfarmu(maincityview.getCityName());
+				}catch (BuildingInCoolDownException e1) {
+					
+					showMessageDialog(null,e1.getMessage());
+				} catch (MaxLevelException e1) {
+					
+					showMessageDialog(null,e1.getMessage());
+				} catch (NotEnoughGoldException e1) {
+					
+					showMessageDialog(null,e1.getMessage());
+				}
+				}
+		};
+		maincityview.getFarm().addActionListener(farmulistener);
+		
+		//				Farm Build Listener
+		farmblistener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					lnkfarmb(maincityview.getCityName());
+				} catch (NotEnoughGoldException e1) {
+					showMessageDialog(null,e1.getMessage());}
+			}
+		};
+		maincityview.Getfarmb().addActionListener(farmblistener);
+		
+		//			Market build Listener
+		marketblistener = new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            try {
+	                lnkmarketb();
+	            } catch (NotEnoughGoldException e1) {
+	            	showMessageDialog(null,e1.getMessage());
+	            }
+	        }
+	    };
+	    maincityview.getMarketb().addActionListener(marketblistener);
+	    
+	    //				market upgrade 
+	    marketulistener = new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		try {
+	    			lnkmarketu(maincityview.getCityName());
+	    		}catch (BuildingInCoolDownException e1) {
+	    			
+	    			showMessageDialog(null,e1.getMessage());
+	    		} catch (MaxLevelException e1) {
+	    			
+	    			showMessageDialog(null,e1.getMessage());
+	    		} catch (NotEnoughGoldException e1) {
+	    			
+	    			showMessageDialog(null,e1.getMessage());
+	    		}
+	    		}
+	    };
+	    maincityview.getMarket().addActionListener(marketulistener);
+	    
+	    //						 archer upgrade
+	    
+	    archerulistener = new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		try {
+	    			lnkarcheru(maincityview.getCityName());
+	    		}catch (BuildingInCoolDownException e1) {
+	    			
+	    			showMessageDialog(null,e1.getMessage());
+	    		} catch (MaxLevelException e1) {
+	    			
+	    			showMessageDialog(null,e1.getMessage());
+	    		} catch (NotEnoughGoldException e1) {
+	    			
+	    			showMessageDialog(null,e1.getMessage());
+	    		}
+	    		}
+	    	};
+	    	maincityview.getArcher().addActionListener(archerulistener);
+	    
+	    
 	}
 	public Game getGame() {
 		return game;
