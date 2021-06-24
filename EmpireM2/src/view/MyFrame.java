@@ -157,7 +157,7 @@ public class MyFrame extends JFrame implements ActionListener {
 		 
 		 archer  = new JButton();
 		  archer .setBounds(350,450,150,50);  
-		  this.add(archer );
+		 this.add(archer );
 		 archer .addActionListener(this);
 		 archer .setText("upgrade");
 		 archer .setFocusable(false ); 
@@ -165,7 +165,7 @@ public class MyFrame extends JFrame implements ActionListener {
 		 archerr  = new JButton();
 		  archerr .setBounds(350,520,150,50);  
 		  this.add(archerr );
-		 archerr .addActionListener(this);
+		 //archerr .addActionListener(this);
 		 archerr .setText("recruit");
 		 archerr .setFocusable(false );
 		 

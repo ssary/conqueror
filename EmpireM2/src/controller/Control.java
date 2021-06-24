@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -15,6 +15,7 @@ import buildings.*;
 import engine.*;
 import exceptions.BuildingInCoolDownException;
 import exceptions.MaxLevelException;
+import exceptions.MaxRecruitedException;
 import exceptions.NotEnoughGoldException;
 import units.Army;
 import view.*;
@@ -36,7 +37,7 @@ public class Control {
 	private ActionListener farmblistener;
 	private ActionListener farmulistener;
 	private ActionListener marketblistener ;
-	
+	private ActionListener archerrlistener;
 	public Control() throws IOException {
 	startingwindow = new StartingWindow();
 	if(!startingwindow.isNextwindow()) {
@@ -85,6 +86,26 @@ public class Control {
 	mapview.setAvailablecities(game.getAvailableCities());
 	maincityview = new MyFrame(cityname);
 	maincityview.add(name);
+	
+	// 					Archer recruit Button Listener
+	archerrlistener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			try {
+				lnkarcherr(maincityview.getCityName());
+			}catch (BuildingInCoolDownException e1) {
+				
+				showMessageDialog(null, e1.getMessage());
+			} catch (NotEnoughGoldException e1) {
+				
+				showMessageDialog(null, e1.getMessage());
+			} catch (MaxRecruitedException e1) {
+				showMessageDialog(null,e1.getMessage());
+			}
+			}
+	};
+	maincityview.getArcherr().addActionListener(archerrlistener);
+	
+	//						Farm upgrade Listener
 	farmulistener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			try {
@@ -101,9 +122,9 @@ public class Control {
 			}
 			}
 	};
-	
 	maincityview.getFarm().addActionListener(farmulistener);
 	
+	//				Farm Build Listener
 	farmblistener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			try {
@@ -115,7 +136,7 @@ public class Control {
 	};
 	maincityview.Getfarmb().addActionListener(farmblistener);
 	
-	
+	//			Market build Listener
 	marketblistener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             try {
@@ -127,13 +148,15 @@ public class Control {
     };
     maincityview.getMarketb().addActionListener(marketblistener);
     
+    
     }
 
-
+	
 	public void lnkfarmb(String city) throws NotEnoughGoldException {
 		try {
 		if(maincityview.getCityName().equals(city)) {
 		player.build("Farm", city);
+		showMessageDialog(null, "You built a farm !");
 		maincityview.add(maincityview.getFarm());
 		maincityview.add(maincityview.getFarmpicture());
 		maincityview.getFarml().setVisible(false);
@@ -177,13 +200,14 @@ public class Control {
 					maincityview.repaint();
 					}
 					catch(NotEnoughGoldException e){
-						e.getMessage();
+						
+						showMessageDialog(null, "Not enough gold ");
 					}
 					catch(BuildingInCoolDownException e) {
-						e.getMessage();
+						showMessageDialog(null, "build in cooldown");
 					}
 					catch(MaxLevelException e) {
-						e.getMessage();
+						showMessageDialog(null, "This building is already lvl 3");
 					}
 					}
 					}
@@ -210,9 +234,15 @@ public class Control {
 
         }
         catch(NotEnoughGoldException e) {
-            System.out.println(e.getMessage());
+        	showMessageDialog(null, e.getMessage());
 
         }
+	}
+	
+	public void lnkarcherr(String city) throws BuildingInCoolDownException, MaxRecruitedException, NotEnoughGoldException {
+		
+		player.recruitUnit("archer", city);
+		showMessageDialog(null, "You rectuited an archer !");
 	}
 	public Game getGame() {
 		return game;
