@@ -11,15 +11,20 @@ public class StartingWindow extends JFrame implements ActionListener{
 	JButton button ;
 	JTextField name;
 	Player p ;
+	JLabel label;
 	boolean nextwindow = false;
 	public StartingWindow() {
 		super();
+		ImageIcon mapimage = new ImageIcon("clashaft.jpg");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(1400,800);
 		this.setResizable(false);
 		this.setLayout(new FlowLayout());
 		setTitle("Conqueror");
 		
+		label =  new JLabel();
+		label.setBounds(0,0,1400,800);
+		label.setIcon(mapimage);
 		name = new JTextField();
 		name.setPreferredSize(new Dimension(250,40));
 		
@@ -35,7 +40,7 @@ public class StartingWindow extends JFrame implements ActionListener{
 		add(button);
 		
 		setVisible(true);
-		
+		add(label);
 	}
 
 	@Override

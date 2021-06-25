@@ -25,8 +25,8 @@ import java.io.File;
 import java.io.IOException;
 
 @SuppressWarnings("serial")
-public class MyFrame extends JFrame implements ActionListener {
-	JButton farm, market , bar,archer, stable ,barr,stabler,archerr,farmb,marketb,barb,stableb,archerb;
+public class MyFrame extends JFrame {
+	JButton farm, market , bar,archer, stable ,barr,stabler,archerr,farmb,marketb,barb,stableb,archerb,back;
 	JLabel farml,marl,barl,arl,stal, farmlvl , archerlvl ,marketlvl;
 	String cityName;
 	//int farmLevel,marketLevel,barLevel,archerLevel,stableLevel;
@@ -62,7 +62,7 @@ public class MyFrame extends JFrame implements ActionListener {
 		  farm.setBounds(0,150,200,50);  
 		  //this.add(farm);
 		 //farm.addActionListener(this);
-		 farm.setText("upgrade ");
+		 farm.setText("upgrade 500");
 		 farm.setFocusable(false );
 		 
 		 
@@ -92,7 +92,7 @@ public class MyFrame extends JFrame implements ActionListener {
 		  market.setBounds(350,250,150,50);  
 		  //this.add(market);
 		 //market.addActionListener(this);
-		 market.setText("upgrade");
+		 market.setText("upgrade 700");
 		 market.setFocusable(false ); 
 		 
 		 
@@ -124,14 +124,14 @@ public class MyFrame extends JFrame implements ActionListener {
 		 bar = new JButton();
 		  bar.setBounds(0,450,150,50);  
 		  this.add(bar);
-		 bar.addActionListener(this);
+		 //bar.addActionListener(this);
 		 bar.setText("upgrade");
 		 bar.setFocusable(false );
 		 
 		 barb = new JButton();
 		  barb.setBounds(0,575,150,50);  
 		  this.add(barb);
-		 barb.addActionListener(this);
+		 //barb.addActionListener(this);
 		 barb.setText("build 2000");
 		 barb.setFocusable(false );
 		 
@@ -139,7 +139,7 @@ public class MyFrame extends JFrame implements ActionListener {
 		 barr = new JButton();
 		  barr.setBounds(0,520,150,50);  
 		  this.add(barr);
-		 barr.addActionListener(this);
+		 //barr.addActionListener(this);
 		 barr.setText("recruit");
 		 barr.setFocusable(false );
 		 
@@ -157,23 +157,23 @@ public class MyFrame extends JFrame implements ActionListener {
 		 
 		 archer  = new JButton();
 		  archer .setBounds(350,450,150,50);  
-		 this.add(archer );
-		 archer .addActionListener(this);
-		 archer .setText("upgrade");
-		 archer .setFocusable(false ); 
+		 //this.add(archer );
+		 //archer .addActionListener(this);
+		 archer .setText("upgrade 800");
+		 //archer .setFocusable(false ); 
 		 
 		 archerr  = new JButton();
 		  archerr .setBounds(350,520,150,50);  
-		  this.add(archerr );
+		  //this.add(archerr );
 		 //archerr .addActionListener(this);
-		 archerr .setText("recruit");
-		 archerr .setFocusable(false );
+		 archerr .setText("recruit 500");
+		 //archerr .setFocusable(false );
 		 
 		 
 		 archerb  = new JButton();
 		  archerb .setBounds(350,600,150,50);  
 		  this.add(archerb );
-		 archerb .addActionListener(this);
+		 //archerb .addActionListener(this);
 		 archerb .setText("build 1500");
 		 archerb .setFocusable(false );
 		 archerlvl = new JLabel();
@@ -190,14 +190,14 @@ public class MyFrame extends JFrame implements ActionListener {
 		 stable  = new JButton();
 		  stable .setBounds(650,350,150,50);  
 		  this.add(stable );
-		 stable .addActionListener(this);
+		 //stable .addActionListener(this);
 		 stable .setText("upgrade");
 		 stable .setFocusable(false );
 		 
 		 stabler  = new JButton();
 		  stabler .setBounds(650,420,150,50);  
 		  this.add(stabler );
-		 stabler.addActionListener(this);
+		 //stabler.addActionListener(this);
 		 stabler.setText("recruit");
 		 stabler.setFocusable(false );
 		 
@@ -205,15 +205,27 @@ public class MyFrame extends JFrame implements ActionListener {
 		 stableb  = new JButton();
 		  stableb .setBounds(650,475,150,50);  
 		  this.add(stableb );
-		 stableb .addActionListener(this);
+		 //stableb .addActionListener(this);
 		 stableb .setText("build 2500");
 		 stableb .setFocusable(false );
 		 
 		 
 		 
 		 
-		 
-		 
+		 	back = new JButton();
+			back.setText("Back");
+			back.setFont(new Font(back.getFont().getName(),Font.BOLD,30));
+			back.setSize(back.getPreferredSize().width , back.getPreferredSize().height);
+			back.setBorder(null);
+			
+			JLabel backl = new JLabel();
+			backl.add(back);
+			backl.setText(back.getText());
+			backl.setSize(back.getSize().width,back.getSize().height);
+			backl.setBounds(1300 , 20 , backl.getSize().width , backl.getSize().height);
+			backl.setBorder(null);
+			add(back);
+			
 		  //ImageIcon image  = new ImageIcon("farm.jpg");
 		 // farml.setIcon(image); 
 		 
@@ -229,26 +241,6 @@ public class MyFrame extends JFrame implements ActionListener {
 		return cityName;
 	}
 
-
-		@Override
-	public void actionPerformed(ActionEvent e) {
-
-		if (e.getSource()==market )
-		{
-			//farm
-		}if (e.getSource()==bar )
-		{
-			//farm
-		}if (e.getSource()==archer )
-		{
-			//farm
-		}if (e.getSource()==stable )
-		{
-			//farm
-		}
-		
-		
-	}
 	 
 		public void setBuildcostfarm(int buildcostfarm) {
 			this.buildcostfarm = buildcostfarm;
@@ -383,6 +375,11 @@ public class MyFrame extends JFrame implements ActionListener {
 		}
 		public JLabel getMarketlvl() {
 			return marketlvl;
+		}
+
+
+		public JButton getBack() {
+			return back;
 		}
 		
 		
