@@ -27,7 +27,7 @@ import java.io.IOException;
 @SuppressWarnings("serial")
 public class MyFrame extends JFrame {
 	JButton farm, market , bar,archer, stable ,barr,stabler,archerr,farmb,marketb,barb,stableb,archerb,back;
-	JLabel farml,marl,barl,arl,stal, farmlvl , archerlvl ,marketlvl;
+	JLabel farml,marl,barl,arl,stal, farmlvl , archerlvl ,marketlvl , stablelvl , barlvl;
 	String cityName;
 	//int farmLevel,marketLevel,barLevel,archerLevel,stableLevel;
 	boolean buildfarm = false;
@@ -123,7 +123,7 @@ public class MyFrame extends JFrame {
 		  
 		 bar = new JButton();
 		  bar.setBounds(0,450,150,50);  
-		  this.add(bar);
+		  //this.add(bar);
 		 //bar.addActionListener(this);
 		 bar.setText("upgrade");
 		 bar.setFocusable(false );
@@ -138,11 +138,11 @@ public class MyFrame extends JFrame {
 		 
 		 barr = new JButton();
 		  barr.setBounds(0,520,150,50);  
-		  this.add(barr);
+		  //this.add(barr);
 		 //barr.addActionListener(this);
 		 barr.setText("recruit");
 		 barr.setFocusable(false );
-		 
+		 barlvl = new JLabel();
 		 
 		 arl= new JLabel();
 		  arl.setText("archer " );
@@ -189,18 +189,18 @@ public class MyFrame extends JFrame {
 		 
 		 stable  = new JButton();
 		  stable .setBounds(650,350,150,50);  
-		  this.add(stable );
+		  //this.add(stable );
 		 //stable .addActionListener(this);
 		 stable .setText("upgrade");
 		 stable .setFocusable(false );
 		 
 		 stabler  = new JButton();
 		  stabler .setBounds(650,420,150,50);  
-		  this.add(stabler );
+		  //this.add(stabler );
 		 //stabler.addActionListener(this);
 		 stabler.setText("recruit");
 		 stabler.setFocusable(false );
-		 
+		 stablelvl = new JLabel();
 
 		 stableb  = new JButton();
 		  stableb .setBounds(650,475,150,50);  
@@ -380,6 +380,16 @@ public class MyFrame extends JFrame {
 
 		public JButton getBack() {
 			return back;
+		}
+
+
+		public JLabel getStablelvl() {
+			return stablelvl;
+		}
+
+
+		public JLabel getBarlvl() {
+			return barlvl;
 		}
 		
 		
