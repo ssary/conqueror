@@ -83,7 +83,7 @@ public class ChooseCityWindow extends JFrame implements ActionListener{
 	buttonca.setSize(cairo.getSize().width,cairo.getSize().height);
 	buttonca.setBounds(700, 400,buttonca.getSize().width, buttonca.getSize().height);
 	
-	
+	add(choose);
 	add(buttonr);
 	add(buttonca);
 	add(buttons);
