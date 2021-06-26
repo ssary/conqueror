@@ -24,14 +24,10 @@ import controller.*;
 @SuppressWarnings("serial")
 public class WorldMapView extends ChooseCityWindow implements ActionListener{
 	ArrayList<City> availablecities;
-	JButton back;
-	
 	public WorldMapView(ArrayList<Army> army) {
 		super();
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-		
-		
 		this.setLayout(null);
 		JTextArea j = new JTextArea();
 		j.setEditable(false);
@@ -116,21 +112,6 @@ public class WorldMapView extends ChooseCityWindow implements ActionListener{
 		jj.setSize(j.getSize().width , j.getSize().height);
 		jj.setBounds(0 , 0 , j.getSize().width,j.getSize().height);
 		jj.setBorder(null);*/
-		
-		back = new JButton();
-		back.setText("Back");
-		back.setFont(new Font(choose.getFont().getName(),Font.BOLD,30));
-		back.setSize(back.getPreferredSize().width , back.getPreferredSize().height);
-		back.setBorder(null);
-		
-		JLabel backl = new JLabel();
-		backl.add(back);
-		backl.setText(back.getText());
-		backl.setSize(back.getSize().width,back.getSize().height);
-		backl.setBounds(700 , 20 , backl.getSize().width , backl.getSize().height);
-		backl.setBorder(null);
-		
-		this.remove(choose);
 		mar.setText(marching);
 		mar.setFont(new Font(choose.getFont().getName(),Font.BOLD,20));
 		mar.setSize(mar.getPreferredSize().width , mar.getPreferredSize().height);
@@ -141,22 +122,10 @@ public class WorldMapView extends ChooseCityWindow implements ActionListener{
 		be.setFont(new Font(choose.getFont().getName(),Font.BOLD,20));
 		be.setSize(be.getPreferredSize().width , be.getPreferredSize().height);
 		be.setBounds(300,0,be.getSize().width,be.getSize().height);
-		add ( backl);
 		add(be);
 		add(label);
-		
-		
-		
-		
 		this.getContentPane().repaint();
 	}
-	
-	
-	public JButton getBack() {
-		return back;
-	}
-
-
 	public void setAvailablecities(ArrayList<City> availablecities) {
 		this.availablecities = availablecities;
 	}

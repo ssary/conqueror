@@ -142,9 +142,8 @@ public class Game {
 		currentTurnCount++;
 		double totalUpkeep = 0;
 		for (City c : player.getControlledCities()) {
-			
 			for (MilitaryBuilding b : c.getMilitaryBuildings()) {
-				
+
 				b.setCoolDown(false);
 				b.setCurrentRecruit(0);
 

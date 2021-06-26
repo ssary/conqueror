@@ -43,11 +43,9 @@ public class Player {
 							|| (type.toLowerCase().equals("infantry") && b instanceof Barracks)) {
 
 						Unit u = b.recruit();
-						
 						if (treasury < b.getRecruitmentCost())
 							throw new NotEnoughGoldException("Not enough gold");
 						treasury -= b.getRecruitmentCost();
-						
 						u.setParentArmy(c.getDefendingArmy());
 						c.getDefendingArmy().getUnits().add(u);
 					}
@@ -59,9 +57,8 @@ public class Player {
 
 	public void build(String type, String cityName) throws NotEnoughGoldException {
 		for (City c : controlledCities) {
-			if (c.getName().toLowerCase().equals(cityName.toLowerCase())) {
+			if (c.getName().equals(cityName)) {
 				Building b = null;
-				System.out.println(type);
 				switch (type.toLowerCase()) {
 				case "archeryrange":
 					b = new ArcheryRange();
@@ -96,16 +93,12 @@ public class Player {
 				if (treasury < b.getCost())
 					throw new NotEnoughGoldException("not enough gold");
 				treasury -= b.getCost();
-				
-				if (type.toLowerCase().equals("farm") || type.toLowerCase().equals("market")) {
+				if (type.toLowerCase().equals("farm") || type.toLowerCase().equals("market"))
 					c.getEconomicalBuildings().add((EconomicBuilding) b);
-					//c.getEconomicalBuildings().get(c.getEconomicalBuildings().size()-1).setCoolDown(true);
-				}
 				else {
 					c.getMilitaryBuildings().add((MilitaryBuilding) b);
-					System.out.println(c.getMilitaryBuildings().size());
 				}
-				
+
 			}
 		}
 	}

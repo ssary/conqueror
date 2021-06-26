@@ -27,13 +27,14 @@ import java.io.IOException;
 @SuppressWarnings("serial")
 public class MyFrame extends JFrame {
 	JButton farm, market , bar,archer, stable ,barr,stabler,archerr,farmb,marketb,barb,stableb,archerb,back;
-	JLabel farml,marl,barl,arl,stal, farmlvl , archerlvl ,marketlvl;
+	JLabel farml,marl,barl,arl,stal, farmlvl , archerlvl ,marketlvl , stablelvl , barlvl;
+	
 	String cityName;
 	//int farmLevel,marketLevel,barLevel,archerLevel,stableLevel;
 	boolean buildfarm = false;
 	int buildcostfarm,buildcostmarket ;
-	ImageIcon myPicture;
-	JLabel farmpicture ;
+	ImageIcon myPicture, marketp,archerp,barracksp,stablep;
+	JLabel farmpicture , marketpicture,stablepicture,barpicture,archerpicture ;
 	public MyFrame(String cityName){
 		 this.cityName = cityName;
 		 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,6 +43,7 @@ public class MyFrame extends JFrame {
 		  this.setSize(1400,1000);
 		  this.setVisible(true);
 		  this.setLayout(null);
+		  
 		 //-------------------------------------------------------------------------------------------
 		  farml= new JLabel();
 		  myPicture = new ImageIcon("farm.png");
@@ -87,9 +89,9 @@ public class MyFrame extends JFrame {
 		   marl.setFont(new Font("MV Boli",Font.PLAIN,30));
 		   marl.setVisible(true);
 		  this.add(marl);
-		  marl.setBounds(350,100,350,350);
+		  marl.setBounds(250,150,150,50);
 		   market  = new JButton();
-		  market.setBounds(350,250,150,50);  
+		  market.setBounds(250,150,200,50);  
 		  //this.add(market);
 		 //market.addActionListener(this);
 		 market.setText("upgrade 700");
@@ -99,7 +101,7 @@ public class MyFrame extends JFrame {
 		 
 
 		 marketb  = new JButton();
-		  marketb.setBounds(350,325,200,50);  
+		  marketb.setBounds(250,225,150,50);  
 		  this.add(marketb);
 		// marketb.addActionListener(this);
 		 marketb.setText("build 1500");
@@ -119,17 +121,17 @@ public class MyFrame extends JFrame {
 		   barl.setFont(new Font("MV Boli",Font.PLAIN,30));
 		   barl.setVisible(true);
 		  this.add(barl);
-		  barl.setBounds(0,250,350,350);
+		  barl.setBounds(0,250,150,150);
 		  
 		 bar = new JButton();
 		  bar.setBounds(0,450,150,50);  
-		  this.add(bar);
+		  //this.add(bar);
 		 //bar.addActionListener(this);
 		 bar.setText("upgrade");
 		 bar.setFocusable(false );
 		 
 		 barb = new JButton();
-		  barb.setBounds(0,575,150,50);  
+		  barb.setBounds(0,455,150,50);  
 		  this.add(barb);
 		 //barb.addActionListener(this);
 		 barb.setText("build 2000");
@@ -138,11 +140,11 @@ public class MyFrame extends JFrame {
 		 
 		 barr = new JButton();
 		  barr.setBounds(0,520,150,50);  
-		  this.add(barr);
+		  //this.add(barr);
 		 //barr.addActionListener(this);
 		 barr.setText("recruit");
 		 barr.setFocusable(false );
-		 
+		 barlvl = new JLabel();
 		 
 		 arl= new JLabel();
 		  arl.setText("archer " );
@@ -151,19 +153,19 @@ public class MyFrame extends JFrame {
 		   arl.setFont(new Font("MV Boli",Font.PLAIN,30));
 		   arl.setVisible(true);
 		  this.add(arl);
-		  arl.setBounds(350,250,350,350);
+		  arl.setBounds(250,250,350,350);
 		 
 		 
 		 
 		 archer  = new JButton();
-		  archer .setBounds(350,450,150,50);  
+		  archer .setBounds(250,450,150,50);  
 		 //this.add(archer );
 		 //archer .addActionListener(this);
 		 archer .setText("upgrade 800");
 		 //archer .setFocusable(false ); 
 		 
 		 archerr  = new JButton();
-		  archerr .setBounds(350,520,150,50);  
+		  archerr .setBounds(250,520,150,50);  
 		  //this.add(archerr );
 		 //archerr .addActionListener(this);
 		 archerr .setText("recruit 500");
@@ -171,7 +173,7 @@ public class MyFrame extends JFrame {
 		 
 		 
 		 archerb  = new JButton();
-		  archerb .setBounds(350,600,150,50);  
+		  archerb .setBounds(250,450,150,50);  
 		  this.add(archerb );
 		 //archerb .addActionListener(this);
 		 archerb .setText("build 1500");
@@ -185,25 +187,25 @@ public class MyFrame extends JFrame {
 		   stal.setFont(new Font("MV Boli",Font.PLAIN,30));
 		   stal.setVisible(true);
 		  this.add(stal);
-		  stal.setBounds(650,150,350,350);
+		  stal.setBounds(500,350,150,150);
 		 
 		 stable  = new JButton();
-		  stable .setBounds(650,350,150,50);  
-		  this.add(stable );
+		  stable .setBounds(500,450,150,50);  
+		  //this.add(stable );
 		 //stable .addActionListener(this);
 		 stable .setText("upgrade");
 		 stable .setFocusable(false );
 		 
 		 stabler  = new JButton();
-		  stabler .setBounds(650,420,150,50);  
-		  this.add(stabler );
+		  stabler .setBounds(500,520,150,50);  
+		  //this.add(stabler );
 		 //stabler.addActionListener(this);
 		 stabler.setText("recruit");
 		 stabler.setFocusable(false );
-		 
+		 stablelvl = new JLabel();
 
 		 stableb  = new JButton();
-		  stableb .setBounds(650,475,150,50);  
+		  stableb .setBounds(500,450,150,50);  
 		  this.add(stableb );
 		 //stableb .addActionListener(this);
 		 stableb .setText("build 2500");
@@ -228,10 +230,74 @@ public class MyFrame extends JFrame {
 			
 		  //ImageIcon image  = new ImageIcon("farm.jpg");
 		 // farml.setIcon(image); 
-		 
+			 marketp = new ImageIcon("market.png");
+			 archerp = new ImageIcon("arcehr.png");
+			  barracksp = new ImageIcon("barracks.png");
+			 stablep = new ImageIcon("stable.jpg");
+			 
+			  marketpicture= new JLabel();
+			  archerpicture= new JLabel();
+			  barpicture= new JLabel();
+			  stablepicture= new JLabel();
+			  
+			 marketpicture.setBounds(250,0,150,150);
+			 marketpicture.setIcon(marketp);
+			  
+			  
+			 archerpicture.setBounds(250,300,150,150);
+			  archerpicture.setIcon(archerp);
+			  
+			  
+			 stablepicture.setBounds(500,350,150,150);
+			 stablepicture.setIcon(stablep);
+			  
+			  
+		  barpicture.setBounds(0,325,150,150);
+		  barpicture.setIcon(barracksp);
+			
 	}
 	
 	
+		public ImageIcon getMarketp() {
+		return marketp;
+	}
+
+
+	public ImageIcon getArcherp() {
+		return archerp;
+	}
+
+
+	public ImageIcon getBarracksp() {
+		return barracksp;
+	}
+
+
+	public ImageIcon getStablep() {
+		return stablep;
+	}
+
+
+	public JLabel getMarketpicture() {
+		return marketpicture;
+	}
+
+
+	public JLabel getStablepicture() {
+		return stablepicture;
+	}
+
+
+	public JLabel getBarpicture() {
+		return barpicture;
+	}
+
+
+	public JLabel getArcherpicture() {
+		return archerpicture;
+	}
+
+
 		public JLabel getFarmlvl() {
 		return farmlvl;
 	}
@@ -380,6 +446,16 @@ public class MyFrame extends JFrame {
 
 		public JButton getBack() {
 			return back;
+		}
+
+
+		public JLabel getStablelvl() {
+			return stablelvl;
+		}
+
+
+		public JLabel getBarlvl() {
+			return barlvl;
 		}
 		
 		
