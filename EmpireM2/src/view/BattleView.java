@@ -1,5 +1,8 @@
 package view;
-
-public class BattleView {
+import controller.*;
+import java.awt.*;
+import javax.swing.*;
+@SuppressWarnings("serial")
+public class BattleView extends JFrame{
 	
 }

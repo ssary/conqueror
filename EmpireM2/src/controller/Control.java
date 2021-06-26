@@ -1,14 +1,24 @@
 package controller;
 
 
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import static javax.swing.JOptionPane.showMessageDialog;
+
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import buildings.EconomicBuilding;
 import buildings.*;
@@ -18,6 +28,7 @@ import exceptions.MaxLevelException;
 import exceptions.MaxRecruitedException;
 import exceptions.NotEnoughGoldException;
 import units.Army;
+import units.Unit;
 import view.*;
 
 
@@ -70,110 +81,7 @@ public class Control {
 			}}};
 	startingwindow.getButton().addActionListener(enterlistener);
 	
-	//startingwindow.dispatchEvent(new WindowEvent(startingwindow, WindowEvent.WINDOW_CLOSING));
 	
-	//				Choose City
-	/*while(!choosecity.getPressed()) {
-		System.out.print("");
-	}*/
-
-
-	
-	/*
-	cityname = choosecity.getChosen();
-	City maincity = new City(cityname);
-	player.getControlledCities().add(maincity);
-	game = new Game(player.getName() ,cityname);
-	choosecity.getContentPane().remove(0);
-	choosecity.repaint();
-	
-	
-	mainwindow = new MainWindow();
-	name.setText("Player : "+ player.getName() + " " +cityname);
-	name.setSize(name.getPreferredSize().width , name.getPreferredSize().height);
-	name.setBounds(1000 , 300 , name.getSize().width , name.getSize().height);
-	food.setText(player.getFood() + "");
-	money.setText("Money : " + player.getTreasury()+"  ");
-	money.setSize(name.getPreferredSize().width , name.getPreferredSize().height);
-	money.setBounds(1000 , 400 , name.getSize().width , name.getSize().height);
-	turncount.setText("Turns : "+ game.getCurrentTurnCount()+"/50  ");
-		
-	
-	player.setTreasury(5000);
-	lnkMainWindow();
-	player.getControlledArmies().add(new Army(cityname) );*/
-	//player.getControlledArmies().add(new Army(cityname) );
-	
-	
-	//mapview = new WorldMapView(player.getControlledArmies()) ;
-	//mapview.setAvailablecities(game.getAvailableCities());
-	//maincityview = new MyFrame(cityname);
-	//maincityview.add(name);
-	
-	
-	/*
-	// 					Archer recruit Button Listener
-	archerrlistener = new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-			try {
-				lnkarcherr(maincityview.getCityName());
-			}catch (BuildingInCoolDownException e1) {
-				
-				showMessageDialog(null, e1.getMessage());
-			} catch (NotEnoughGoldException e1) {
-				
-				showMessageDialog(null, e1.getMessage());
-			} catch (MaxRecruitedException e1) {
-				showMessageDialog(null,e1.getMessage());
-			}
-			}
-	};
-	maincityview.getArcherr().addActionListener(archerrlistener);
-	
-	//						Farm upgrade Listener
-	farmulistener = new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-			try {
-				lnkfarmu(maincityview.getCityName());
-			}catch (BuildingInCoolDownException e1) {
-				
-				showMessageDialog(null,e1.getMessage());
-			} catch (MaxLevelException e1) {
-				
-				showMessageDialog(null,e1.getMessage());
-			} catch (NotEnoughGoldException e1) {
-				
-				showMessageDialog(null,e1.getMessage());
-			}
-			}
-	};
-	maincityview.getFarm().addActionListener(farmulistener);
-	
-	//				Farm Build Listener
-	farmblistener = new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-			try {
-				lnkfarmb(maincityview.getCityName());
-			} catch (NotEnoughGoldException e1) {
-				showMessageDialog(null,e1.getMessage());
-			}
-		}
-	};
-	maincityview.Getfarmb().addActionListener(farmblistener);
-	
-	//			Market build Listener
-	marketblistener = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            try {
-                lnkmarketb();
-            } catch (NotEnoughGoldException e1) {
-                showMessageDialog(null,e1.getMessage());
-            }
-        }
-    };
-    maincityview.getMarketb().addActionListener(marketblistener);
-    
-    */
     }
 
 	
@@ -233,10 +141,10 @@ public class Control {
         
         player.build("Market", cityname);
         maincityview.add(maincityview.getMarket());
-        //maincityview.add(maincityview.getMarketpicture());
+        maincityview.add(maincityview.getMarketpicture());
         maincityview.getMarl().setVisible(false);
         maincityview.getMarketlvl().setText("LVL1");
-        maincityview.getMarketlvl().setBounds(350 , 20 , maincityview.getMarketlvl().getPreferredSize().width,maincityview.getMarketlvl().getPreferredSize().height);
+        maincityview.getMarketlvl().setBounds(400 , 20 , maincityview.getMarketlvl().getPreferredSize().width,maincityview.getMarketlvl().getPreferredSize().height);
         maincityview.add(maincityview.getMarketlvl());
         money.setText(""+player.getTreasury());
         maincityview.add(money);
@@ -283,14 +191,14 @@ public class Control {
 
 		showMessageDialog(null, "You built a archeryrange !");
 		maincityview.add(maincityview.getArcher());
-		//maincityview.add(maincityview.getArcherpicture());
+		maincityview.add(maincityview.getArcherpicture());
 		maincityview.add(maincityview.getArcherr());
 		maincityview.getMarl().setVisible(false);
-
+		
 		money.setText(""+player.getTreasury());
 		maincityview.getArcherlvl().setText("LVL 1");
 		maincityview.getArcherlvl().setSize(maincityview.getArcherlvl().getPreferredSize().width ,maincityview.getArcherlvl().getPreferredSize().height );
-		maincityview.getArcherlvl().setBounds(550 , 450 , maincityview.getArcherlvl().getSize().width,maincityview.getArcherlvl().getSize().height);
+		maincityview.getArcherlvl().setBounds(400 , 400 , maincityview.getArcherlvl().getSize().width,maincityview.getArcherlvl().getSize().height);
 		maincityview.add(maincityview.getArcherlvl());
 		maincityview.add(money);
 
@@ -315,6 +223,7 @@ public class Control {
 					maincityview.add(maincityview.getArcherlvl());
 					maincityview.getArcher().setText("Upgrade " + b.getUpgradeCost());
 					money.setText(""+player.getTreasury());
+					maincityview.getArcherr().setText("recruit " + b.getRecruitmentCost());
 					maincityview.add(money);
 					maincityview.repaint();
 					refreshmain();
@@ -333,7 +242,9 @@ public class Control {
 		maincityview.add(money);
 		maincityview.repaint();
 		refreshmain();
+		refreshdefending(maincityview);
 		showMessageDialog(null, "You rectuited an archer !");
+		
 	}
 	
 	
@@ -345,7 +256,7 @@ public class Control {
 			maincityview.add(money);
 	    	showMessageDialog(null, "You built a Stable !");
 	    	maincityview.add(maincityview.getStable());
-	    	//maincityview.add(maincityview.getArcherpicture());
+	    	maincityview.add(maincityview.getStablepicture());
 	    	maincityview.getStal().setVisible(false);
 	    	maincityview.getStableb().setVisible(false);
 
@@ -400,14 +311,14 @@ public class Control {
 		player.build("Barracks", maincityview.getCityName());
 		showMessageDialog(null, "You built a barracks !");
 		maincityview.add(maincityview.getBar());
-		//maincityview.add(maincityview.getArcherpicture());
+		maincityview.add(maincityview.getBarpicture());
 		maincityview.getBarl().setVisible(false);
 		maincityview.add(money);
 
 		money.setText(""+player.getTreasury());
 		maincityview.getBarlvl().setText("LVL 1");
 		maincityview.getBarlvl().setSize(maincityview.getBarlvl().getPreferredSize().width ,maincityview.getBarlvl().getPreferredSize().height );
-		maincityview.getBarlvl().setBounds(550 , 350 , maincityview.getBarlvl().getSize().width,maincityview.getBarlvl().getSize().height);
+		maincityview.getBarlvl().setBounds(150 , 350 , maincityview.getBarlvl().getSize().width,maincityview.getBarlvl().getSize().height);
 		maincityview.add(maincityview.getBarlvl());
 		maincityview.add(money);
 		maincityview.getBar().setText("Upgrade 1000");
@@ -457,7 +368,9 @@ public class Control {
 	            player.recruitUnit("Infantry", maincityview.getCityName());
 	    		maincityview.repaint();
 	    		refreshmain();
+	    		refreshdefending(maincityview);
 	            showMessageDialog(null, "You rectuited an Infantry !");
+	            
 	        }
 	//----------------------------------------------------------------------------------
 	
@@ -468,6 +381,7 @@ public class Control {
 					player.recruitUnit("Cavalry", maincityview.getCityName());
 					maincityview.repaint();
 		    		refreshmain();
+		    		refreshdefending(maincityview);
 					showMessageDialog(null, "You rectuited an stable !");}
 	
 	
@@ -633,6 +547,8 @@ public class Control {
 		//if(cityn.equals(maincityview.getCityName().toLowerCase())) {
 		//	maincityview.setVisible(true);
 		//}
+		
+		maincityview.add(maincityview.getDefending());
 		
 		
 		//				Back
@@ -879,6 +795,7 @@ public class Control {
 		mainwindow.getFood().setText("Food " + player.getFood());
 		mainwindow.getTurncount().setText("Turns : "+ game.getCurrentTurnCount()+"/50  ");
 		mainwindow.repaint();
+		
 	}
 	public void lnkback() {
 		mapview.setVisible(false);
@@ -890,9 +807,67 @@ public class Control {
 	
 	public void lnkendturn() {
 		game.endTurn();
+		
 		refreshmain();
+		
 	}
 	
+	public void refreshdefending(MyFrame maincityview) {
+		String city = maincityview.getCityName();
+		//ArrayList<String> units = new ArrayList<String>();
+        DefaultListModel<String> units = new DefaultListModel<>();  
+        DefaultListModel<String> unitsarmy = new DefaultListModel<>();  
+        maincityview.getDefending().setEditable(false);
+		for(City c : player.getControlledCities()) {
+			if(c.getName().equals(city)) {
+
+				
+				for(Unit u : c.getDefendingArmy().getUnits()) {
+					String[] s =u.getClass().toString().split("\\."); 
+						String add = "";
+						add += "Unit " + s[1] +" | ";
+						add += "Level" + u.getLevel() + " | ";
+						add += "Current soldier count : " + u.getCurrentSoldierCount() + " | "
+								+ "\n\n";
+					
+						units.addElement(add);
+					
+				}
+				
+				
+			}
+		}
+		int i =1 ;
+		String add = "";
+		for(Army a : player.getControlledArmies()) {
+			if(a.getCurrentLocation().equals(city)) {
+				add += "army " + i;
+				
+				for(Unit u : a.getUnits()) {
+					String[] s =u.getClass().toString().split("\\."); 
+						
+						add += "Unit " + s[1] +" | ";
+						add += "Level" + u.getLevel() + " | ";
+						add += "Current soldier count : " + u.getCurrentSoldierCount() + " | ";
+						
+						unitsarmy.addElement(add);
+				}
+				
+				
+			}
+		}
+		
+		JList<String> list = new JList<>(units); 
+		JList<String> listarmy = new JList<>(unitsarmy); 
+		list.setBounds(800,100, list.getPreferredSize().width + 20,list.getPreferredSize().height );
+		
+		listarmy.setBounds(list.getX() +list.getPreferredSize().width + 20 ,100, listarmy.getPreferredSize().width + 20,listarmy.getPreferredSize().height);
+		maincityview.setDeflist(list);
+		maincityview.setArmylist(listarmy);
+		maincityview.add(list);
+		maincityview.add(listarmy);
+		maincityview.repaint();
+	}
 	public ArrayList<Army> getIdleArmy() {
 		return player.getControlledArmies();
 	}

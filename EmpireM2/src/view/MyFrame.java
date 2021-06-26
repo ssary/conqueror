@@ -29,15 +29,73 @@ public class MyFrame extends JFrame {
 	JButton farm, market , bar,archer, stable ,barr,stabler,archerr,farmb,marketb,barb,stableb,archerb,back;
 	JLabel farml,marl,barl,arl,stal, farmlvl , archerlvl ,marketlvl , stablelvl , barlvl;
 	String cityName;
+	JPanel defpanel;
+	JList deflist;
+	JList armylist;
+	ImageIcon  marketp,archerp,barracksp,stablep;
+
+	JLabel marketpicture,stablepicture,barpicture,archerpicture ;
+	public JList getArmylist() {
+		return armylist;
+	}
+
+
+	public void setArmylist(JList armylist) {
+		this.armylist = armylist;
+	}
+
+
+	JScrollPane scrollPane;
 	//int farmLevel,marketLevel,barLevel,archerLevel,stableLevel;
 	boolean buildfarm = false;
 	int buildcostfarm,buildcostmarket ;
 	ImageIcon myPicture;
 	JLabel farmpicture ;
+	JTextArea defending ,army;
+	JTextArea area = new JTextArea();
+	
+	
 	public MyFrame(String cityName){
+		
+
+		 
+		  marketpicture= new JLabel();
+		  archerpicture= new JLabel();
+		  barpicture= new JLabel();
+		  stablepicture= new JLabel();
+		  
+		 marketpicture.setBounds(250,0,150,150);
+		 marketpicture.setIcon(marketp);
+		  
+		  
+		 archerpicture.setBounds(250,300,150,150);
+		  archerpicture.setIcon(archerp);
+		  
+		  
+		 stablepicture.setBounds(500,350,150,150);
+		 stablepicture.setIcon(stablep);
 		 this.cityName = cityName;
 		 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		 
+		defending = new JTextArea();
+		defending.setEditable(false);
+		defending.setLineWrap(true);
+		defending.setBorder(null);
+		defending.setText("Defending Army \n");
+		defending.setSize(defending.getPreferredSize().width , defending.getPreferredSize().height);
+		defending.setBounds(800 , 20,
+				defending.getSize().width, defending.getSize().height);
+		
+		army = new JTextArea();
+		army.setEditable(false);
+		army.setLineWrap(true);
+		army.setBorder(null);
+		army.setText("Army in the city \n");
+		army.setSize(army.getPreferredSize().width , army.getPreferredSize().height);
+		army.setBounds(800 , 20,
+				army.getSize().width, army.getSize().height);
+		deflist = new JList();
+		defpanel = new JPanel();
+		
 		  this.setResizable(false);
 		  this.setSize(1400,1000);
 		  this.setVisible(true);
@@ -228,7 +286,42 @@ public class MyFrame extends JFrame {
 			
 		  //ImageIcon image  = new ImageIcon("farm.jpg");
 		 // farml.setIcon(image); 
-		 
+			 myPicture = new ImageIcon("farm.png");
+			  farmpicture = new JLabel();
+			  farmpicture.setBounds(0,0,150,150);
+			  farmpicture.setIcon(myPicture);
+			  
+			marketp = new ImageIcon("market.png");
+			 archerp = new ImageIcon("arcehr.png");
+			  barracksp = new ImageIcon("barracks.png");
+			 stablep = new ImageIcon("stable.jpg");
+			 
+			barpicture.setBounds(0,325,150,150);
+			  barpicture.setIcon(barracksp);
+			  
+			  market.setBounds(250,150,200,50);  
+			  marl.setBounds(250,150,150,50);
+			  marketb.setBounds(250,225,150,50);  
+			  barl.setBounds(0,250,150,150);
+			  barb.setBounds(0,455,150,50);  
+			  bar.setBounds(0,450,150,50); 
+			  farmb.setBounds(0,225,150,50);  
+				 arl.setBounds(250,250,350,350);
+				  archer .setBounds(250,450,150,50);  
+				  stal.setBounds(500,350,150,150);
+				  stable .setBounds(500,450,150,50); 
+				  marketpicture.setBounds(250,0,150,150);
+					 archerpicture.setBounds(250,300,150,150);	  
+				  
+				 stablepicture.setBounds(500,350,150,150);
+				 
+				 archerr  = new JButton();
+				 archerr.setText("rectruit 400");
+				  stableb .setBounds(500,450,150,50);  
+				 stabler .setBounds(500,520,150,50); 
+				 archerb .setBounds(250,450,150,50);  
+				 barr.setBounds(0,520,150,50);
+				  archerr .setBounds(250,520,150,50);  
 	}
 	
 	
@@ -391,6 +484,86 @@ public class MyFrame extends JFrame {
 		public JLabel getBarlvl() {
 			return barlvl;
 		}
+
+
+		public JTextArea getDefending() {
+			return defending;
+		}
+
+
+		public JPanel getDefpanel() {
+			return defpanel;
+		}
+
+
+		public JList getDeflist() {
+			return deflist;
+		}
+
+
+		public void setDeflist(JList deflist) {
+			this.deflist = deflist;
+		}
+
+
+		public JScrollPane getScrollPane() {
+			return scrollPane;
+		}
+
+
+		public void setScrollPane(JScrollPane scrollPane) {
+			this.scrollPane = scrollPane;
+		}
+
+
+		public ImageIcon getMarketp() {
+			return marketp;
+		}
+
+
+		public ImageIcon getArcherp() {
+			return archerp;
+		}
+
+
+		public ImageIcon getBarracksp() {
+			return barracksp;
+		}
+
+
+		public ImageIcon getStablep() {
+			return stablep;
+		}
+
+
+		public JLabel getMarketpicture() {
+			return marketpicture;
+		}
+
+
+		public JLabel getStablepicture() {
+			return stablepicture;
+		}
+
+
+		public JLabel getBarpicture() {
+			return barpicture;
+		}
+
+
+		public JLabel getArcherpicture() {
+			return archerpicture;
+		}
+
+
+		public JTextArea getArmy() {
+			return army;
+		}
+
+
+		public JTextArea getArea() {
+			return area;
+		}
 		
-		
+	
 }

@@ -13,6 +13,10 @@ public class MainWindow extends JFrame{
 	JLabel name ;
 	JButton map;
 	JButton endturn;
+	JButton initiatearmy;
+	JButton relocateunit ;
+	JButton targetcity ;
+	
 	public MainWindow() {
 		super();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -38,6 +42,8 @@ public class MainWindow extends JFrame{
 		add(name);
 		add(map);
 		add(endturn);
+		
+		
 	}
 	public JLabel getFood() {
 		return food;
