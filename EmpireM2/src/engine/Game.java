@@ -1,5 +1,7 @@
 package engine;
 
+import static javax.swing.JOptionPane.showMessageDialog;
+
 import java.io.BufferedReader;  
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,7 +25,7 @@ public class Game {
 	private ArrayList<Distance> distances;
 	private final int maxTurnCount = 30;
 	private int currentTurnCount;
-
+	private String log ;
 	public Game(String playerName, String playerCity) throws IOException {
 
 		player = new Player(playerName);
@@ -164,7 +166,7 @@ public class Game {
 				a.setCurrentStatus(Status.MARCHING);
 				a.setCurrentLocation("onRoad");
 			}
-			if(a.getDistancetoTarget()>0 &&!a.getTarget().equals(""))
+			 if(a.getDistancetoTarget()>0 &&!a.getTarget().equals(""))
 			a.setDistancetoTarget(a.getDistancetoTarget() - 1);
 			if (a.getDistancetoTarget() == 0) {
 				a.setCurrentLocation(a.getTarget());
@@ -205,15 +207,28 @@ public class Game {
 
 	}
 
-	public void autoResolve(Army attacker, Army defender) throws FriendlyFireException {
-		int turn = 1;
+	public void autoResolve(Army attacker, Army defender , int t) throws FriendlyFireException {
+		log = "";
+		int turn = t;
 		while (attacker.getUnits().size() != 0 && defender.getUnits().size() != 0) {
 			Unit unit1 = attacker.getUnits().get((int) (Math.random() * attacker.getUnits().size()));
 			Unit unit2 = defender.getUnits().get((int) (Math.random() * defender.getUnits().size()));
-			if (turn == 1)
+			int bef =0 ;
+			int aft =0 ;
+			if (turn == 1) {
+				bef = unit2.getCurrentSoldierCount();
 				unit1.attack(unit2);
-			else
+				aft = unit2.getCurrentSoldierCount() ;
+				showMessageDialog(null,"Gamed ya " +player.getName()+ " defending army lost :" + (bef-aft) + " units");
+				log += " defending army lost :" + (bef-aft) + " units\n" ;
+				}
+			else {
+				bef = unit2.getCurrentSoldierCount();				
 				unit2.attack(unit1);
+				aft = unit2.getCurrentSoldierCount() ;
+				showMessageDialog(null," your army lost :" + (bef-aft) + " units");
+				log += " your army lost :" + (bef-aft) + " units\n";
+}
 			turn = turn == 1 ? 0 : 1;
 
 		}
