@@ -14,8 +14,10 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -24,15 +26,21 @@ import buildings.EconomicBuilding;
 import buildings.*;
 import engine.*;
 import exceptions.BuildingInCoolDownException;
+import exceptions.FriendlyCityException;
+import exceptions.FriendlyFireException;
 import exceptions.MaxLevelException;
 import exceptions.MaxRecruitedException;
 import exceptions.NotEnoughGoldException;
+import exceptions.TargetNotReachedException;
 import units.Army;
+import units.Status;
 import units.Unit;
 import view.*;
 
 
 public class Control {
+	private int d =0 ;
+	
 	private Game game ;
 	private City maincity ;
 	private Player player ;
@@ -44,6 +52,7 @@ public class Control {
 	private MainWindow mainwindow;
 	private ChooseCityWindow choosecity;
 	private WorldMapView mapview ;
+	private BattleView battleview ;
 	private String cityname ;
 	private MyFrame cairoview ;
 	private MyFrame romeview ;
@@ -66,7 +75,8 @@ public class Control {
 	private ActionListener barblistener ;
 	private ActionListener barulistener;
 	private ActionListener barrlistener;
-	private ActionListener stablerlistener;
+	private ActionListener stablerlistener , chooseunit , chooseunitdef;
+	public int idxarmy ,idxdefarmy;
 	public Control() throws IOException {
 		
 	// 					Starting window
@@ -498,7 +508,12 @@ public class Control {
 		endlistener = new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				lnkendturn();
+				try {
+					lnkendturn();
+				} catch (TargetNotReachedException | FriendlyCityException | FriendlyFireException e1) {
+					
+					showMessageDialog(null, e1.getMessage());
+				}
 			}
 		};
 		mainwindow.getEndturn().addActionListener(endlistener);
@@ -805,13 +820,128 @@ public class Control {
 		maincityview.setVisible(false);
 	}
 	
-	public void lnkendturn() {
+	public void lnkendturn() throws TargetNotReachedException, FriendlyCityException, FriendlyFireException {
+		
+		
 		game.endTurn();
+		
+		String []response = {"Attack defending army" , "Lay Siege the city" }; 
+		for(Army a : player.getControlledArmies()) {
+			for(City city : game.getAvailableCities()) {
+				if(a.getCurrentLocation().equals(city.getName()) && !player.getControlledCities().contains(city)) {
+					battleview = new BattleView();
+					String mess =  "Your army reached " + a.getTarget() + "what now ?"; 
+					int choice = JOptionPane.showOptionDialog(null, mess, "secret", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, response, 0);
+					System.out.println(choice);
+					if(choice == 0 ) {
+						autoOrAttack(a , city.getDefendingArmy(),1);
+					}
+					else if(choice == 1) {
+						player.laySiege(a, city);
+					}
+				}
+			}
+		}
 		
 		refreshmain();
 		
 	}
 	
+	public void autoOrAttack(Army attacker , Army defender , int t) throws FriendlyFireException {
+		
+		int turns =t ;
+		String [] response  ={"Attack manually" , "Random choose of 2 units" } ;
+		int choice = JOptionPane.showOptionDialog(null, "Attacking defending army", "secret", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, response, 0);
+		if(choice == 0) {
+			while (attacker.getUnits().size() != 0 && defender.getUnits().size() != 0) {
+			ArrayList<String> myarmy = new ArrayList <String>();
+			ArrayList<Unit> myarmyunits = new ArrayList<Unit>();
+			ArrayList<String> defarmy = new ArrayList <String>();
+			for(Unit u : attacker.getUnits()) {
+				String[] s =u.getClass().toString().split("\\."); 
+				String add = "";
+				add += "Unit " + s[1] +" | ";
+				add += "Level" + u.getLevel() + " | ";
+				add += "Current soldier count : " + u.getCurrentSoldierCount() + " | "
+						+ "";
+				myarmy.add(add);
+			}
+			
+			for(Unit u : defender.getUnits()) {
+				String[] s =u.getClass().toString().split("\\."); 
+				String add = "";
+				add += "Unit " + s[1] +" | ";
+				add += "Level" + u.getLevel() + " | ";
+				add += "Current soldier count : " + u.getCurrentSoldierCount() + " | "
+						+ "";
+				defarmy.add(add);
+			}
+			
+			
+			String[] myarmyarray = myarmy.toArray(new String[0]);
+			String[] defarmyarray = defarmy.toArray(new String[0]);
+			
+			JComboBox myarmyCombo = new JComboBox(myarmyarray);
+			JComboBox defarmyCombo = new JComboBox(defarmyarray);
+			
+			idxarmy = idxdefarmy = -1;
+			chooseunit = new ActionListener () {
+				public void actionPerformed(ActionEvent e) {
+					if(e.getSource() == myarmyCombo) {
+						idxarmy = myarmyCombo.getSelectedIndex();
+						
+					}
+					if(e.getSource() == defarmyCombo) {
+						idxdefarmy = defarmyCombo.getSelectedIndex();
+						
+					}
+				}
+			};
+			
+			myarmyCombo.addActionListener(chooseunit);
+			defarmyCombo.addActionListener(chooseunit);
+			// defending mbydrbsh :< || el lost units mbtzhrsh || ellog ele btwarek men bydrb men
+			int bef = 0 ;
+			int aft = 0 ;
+			if(idxarmy != -1 && idxdefarmy != -1) {
+				if(turns == 1) {
+					bef = defender.getUnits().get(idxarmy).getCurrentSoldierCount();
+				attacker.getUnits().get(idxarmy).attack(defender.getUnits().get(idxdefarmy));
+				aft = defender.getUnits().get(idxarmy).getCurrentSoldierCount() ;
+				showMessageDialog(null,"Gamed ya " +player.getName()+ " defending lost " + (bef-aft) + " units");
+				}
+				else {
+					bef = attacker.getUnits().get(idxarmy).getCurrentSoldierCount();
+					defender.getUnits().get(idxarmy).attack(attacker.getUnits().get(idxdefarmy));
+					aft = attacker.getUnits().get(idxarmy).getCurrentSoldierCount() ;
+					showMessageDialog(null, " you lost " + (bef-aft) + " units");
+				}
+				
+			}
+			
+			}
+			
+			if(attacker.getUnits().size() != 0) {
+				game.occupy(attacker, cityname);
+				showMessageDialog(null,"You won the battle woho !");
+			}
+			else
+				showMessageDialog(null,"You lost the battle :(");
+			
+			autoOrAttack(attacker,defender,turns);
+		}
+		else {
+			game.autoResolve(attacker, defender,turns);
+			for(City c : game.getAvailableCities()) {
+				if(c.getName().equals(attacker.getCurrentLocation())) {
+					if( player.getControlledCities().contains(c))
+						showMessageDialog(null,"You won the battle ! ");
+					else
+						showMessageDialog(null,"You lost the battle ! ");
+				}
+			}
+		}
+	}
 	public void refreshdefending(MyFrame maincityview) {
 		String city = maincityview.getCityName();
 		//ArrayList<String> units = new ArrayList<String>();
@@ -868,6 +998,8 @@ public class Control {
 		maincityview.add(listarmy);
 		maincityview.repaint();
 	}
+	
+	
 	public ArrayList<Army> getIdleArmy() {
 		return player.getControlledArmies();
 	}
