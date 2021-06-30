@@ -207,29 +207,29 @@ public class Game {
 
 	}
 
-	public void autoResolve(Army attacker, Army defender , int t) throws FriendlyFireException {
+	public void autoResolve(Army attacker, Army defender , boolean t) throws FriendlyFireException {
 		log = "";
-		int turn = t;
+		boolean turn = t;
 		while (attacker.getUnits().size() != 0 && defender.getUnits().size() != 0) {
 			Unit unit1 = attacker.getUnits().get((int) (Math.random() * attacker.getUnits().size()));
 			Unit unit2 = defender.getUnits().get((int) (Math.random() * defender.getUnits().size()));
 			int bef =0 ;
 			int aft =0 ;
-			if (turn == 1) {
+			if (turn ) {
 				bef = unit2.getCurrentSoldierCount();
 				unit1.attack(unit2);
 				aft = unit2.getCurrentSoldierCount() ;
-				showMessageDialog(null,"Gamed ya " +player.getName()+ " defending army lost :" + (bef-aft) + " units");
+				showMessageDialog(null,"Gamed ya " +player.getName()+ " defending army lost :" + (bef-aft) + " units " + aft);
 				log += " defending army lost :" + (bef-aft) + " units\n" ;
 				}
 			else {
 				bef = unit2.getCurrentSoldierCount();				
 				unit2.attack(unit1);
 				aft = unit2.getCurrentSoldierCount() ;
-				showMessageDialog(null," your army lost :" + (bef-aft) + " units");
+				showMessageDialog(null," your army lost :" + (bef-aft) + " units  " + aft);
 				log += " your army lost :" + (bef-aft) + " units\n";
 }
-			turn = turn == 1 ? 0 : 1;
+			turn = !turn;
 
 		}
 		if (attacker.getUnits().size() != 0)

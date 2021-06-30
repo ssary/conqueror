@@ -24,7 +24,7 @@ public class Army{
 	public void relocateUnit(Unit unit) throws MaxCapacityException
 	{
 		if(units.size()==maxToHold)
-			throw new MaxCapacityException("Maximum capacity reached");
+		throw new MaxCapacityException("Maximum capacity reached");
 		units.add(unit);
 		unit.getParentArmy().units.remove(unit);
 		unit.setParentArmy(this);

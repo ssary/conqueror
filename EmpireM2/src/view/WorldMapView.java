@@ -3,15 +3,19 @@ package view;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -24,8 +28,11 @@ import controller.*;
 @SuppressWarnings("serial")
 public class WorldMapView extends ChooseCityWindow implements ActionListener{
 	ArrayList<City> availablecities;
-	JButton back;
-	
+	JButton back , relocatei ,relocatem , relocateb;
+	JTextArea j , be , mar ;
+	JScrollPane jscroll , bescroll , marscroll;
+	JPanel jp , bep, marp ;
+	JButton targetcity ;
 	public WorldMapView(ArrayList<Army> army) {
 		super();
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -33,22 +40,41 @@ public class WorldMapView extends ChooseCityWindow implements ActionListener{
 		
 		
 		this.setLayout(null);
-		JTextArea j = new JTextArea();
+		j = new JTextArea();
 		j.setEditable(false);
 		j.setLineWrap(true);
 		j.setBorder(null);
 		
-		JTextArea be = new JTextArea();
+		be = new JTextArea();
 		be.setEditable(false);
 		be.setLineWrap(true);
 		be.setBorder(null);
 		
-		JTextArea mar = new JTextArea();
+		mar = new JTextArea();
 		mar.setEditable(false);
 		mar.setLineWrap(true);
 		mar.setBorder(null);
 		
+		targetcity = new JButton();
+		targetcity.setText("target city");
+		targetcity.setSize(targetcity.getPreferredSize());
+		targetcity.setBounds(500,100 , targetcity.getSize().width , targetcity.getSize().height);
 		
+		
+		relocatei = new JButton();
+		relocatei.setText("Relocate unit from idle");
+		relocatei.setSize(relocatei.getPreferredSize());
+		relocatei.setBounds(100,600 , relocatei.getSize().width , relocatei.getSize().height);
+		
+		relocatem = new JButton();
+		relocatem.setText("Relocate unit from marching");
+		relocatem.setSize(relocatem.getPreferredSize());
+		relocatem.setBounds(800,600 , relocatem.getSize().width , relocatem.getSize().height);
+		
+		relocateb = new JButton();
+		relocateb.setText("Relocate unit from besieging");
+		relocateb.setSize(relocateb.getPreferredSize());
+		relocateb.setBounds(1100,600 , relocateb.getSize().width , relocateb.getSize().height);
 		
 		String ad = "my Idle Armies:\n";
 		String besiege ="my Besiege Armies:\n";
@@ -57,7 +83,7 @@ public class WorldMapView extends ChooseCityWindow implements ActionListener{
 		int i =1 ;
 		for(Army a : army) {
 			if(a.getCurrentStatus()==Status.IDLE) {
-			System.out.println("aw");
+			
 			ad+= "Army" + i + "\n";
 			int m = 1;
 			for(Unit u : a.getUnits()) {
@@ -106,9 +132,23 @@ public class WorldMapView extends ChooseCityWindow implements ActionListener{
 		j.setText(ad);
 		j.setFont(new Font(choose.getFont().getName(),Font.BOLD,25));
 		j.setSize(j.getPreferredSize().width , j.getPreferredSize().height);
-		j.setBounds(0,0,j.getSize().width,j.getSize().height);
+		j.setBounds(0,0,300,600);
 		
-		add(j);
+		jp = new JPanel();
+		jp.setLayout(new GridLayout(1,4));
+		jp.setSize(300, 600);
+		jp.setBounds(0,0 ,300 , 600);
+		
+		jscroll = new JScrollPane(j , JScrollPane.VERTICAL_SCROLLBAR_ALWAYS ,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS );
+		jscroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black)));
+		jscroll.setBounds(0,0 , 300 , 600);
+		jscroll.setViewportView(j);
+		
+		jp.add(jscroll);
+		add(jp);
+		
+		
+		
 		
 		/*JLabel jj = new JLabel();
 		jj.add(j);
@@ -127,22 +167,54 @@ public class WorldMapView extends ChooseCityWindow implements ActionListener{
 		backl.add(back);
 		backl.setText(back.getText());
 		backl.setSize(back.getSize().width,back.getSize().height);
-		backl.setBounds(700 , 20 , backl.getSize().width , backl.getSize().height);
+		backl.setBounds(650 , 20 , backl.getSize().width , backl.getSize().height);
 		backl.setBorder(null);
 		
 		this.remove(choose);
 		mar.setText(marching);
 		mar.setFont(new Font(choose.getFont().getName(),Font.BOLD,20));
-		mar.setSize(mar.getPreferredSize().width , mar.getPreferredSize().height);
-		mar.setBounds(150,0,mar.getSize().width,mar.getSize().height);
-		add(mar);
+		mar.setSize(300 ,600);
+		mar.setBounds(800,0,mar.getSize().width,mar.getSize().height);
+		
+		marp = new JPanel();
+		marp.setLayout(new GridLayout(1,4));
+		marp.setSize(300, 600);
+		marp.setBounds(800,0 ,300 , 600);
+		
+		marscroll = new JScrollPane(mar , JScrollPane.VERTICAL_SCROLLBAR_ALWAYS ,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS );
+		marscroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black)));
+		marscroll.setBounds(800,0 , 300 , 600);
+		marscroll.setViewportView(mar);
+		
+		marp.add(marscroll);
+		add(marp);
+		
+		
 		
 		be.setText(besiege);
 		be.setFont(new Font(choose.getFont().getName(),Font.BOLD,20));
 		be.setSize(be.getPreferredSize().width , be.getPreferredSize().height);
-		be.setBounds(300,0,be.getSize().width,be.getSize().height);
+		be.setBounds(1100,0,300,600);
+		
+		bep = new JPanel();
+		bep.setLayout(new GridLayout(1,4));
+		bep.setSize(300, 600);
+		bep.setBounds(1100,0 ,300 , 600);
+		
+		bescroll = new JScrollPane(be , JScrollPane.VERTICAL_SCROLLBAR_ALWAYS ,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS );
+		bescroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black)));
+		bescroll.setBounds(1100,0 , 300 , 600);
+		bescroll.setViewportView(be);
+		
+		bep.add(bescroll);
+		add(bep);
+		
+		
 		add ( backl);
-		add(be);
+		add(relocatei);
+		add(relocateb);
+		add(relocatem);
+		add(targetcity);
 		add(label);
 		
 		
@@ -159,6 +231,76 @@ public class WorldMapView extends ChooseCityWindow implements ActionListener{
 
 	public void setAvailablecities(ArrayList<City> availablecities) {
 		this.availablecities = availablecities;
+	}
+
+
+	public ArrayList<City> getAvailablecities() {
+		return availablecities;
+	}
+
+
+	public JTextArea getJ() {
+		return j;
+	}
+
+
+	public JTextArea getBe() {
+		return be;
+	}
+
+
+	public JTextArea getMar() {
+		return mar;
+	}
+
+
+	public JButton getRelocatei() {
+		return relocatei;
+	}
+
+
+	public JButton getRelocatem() {
+		return relocatem;
+	}
+
+
+	public JButton getRelocateb() {
+		return relocateb;
+	}
+
+
+	public JScrollPane getJscroll() {
+		return jscroll;
+	}
+
+
+	public JScrollPane getBescroll() {
+		return bescroll;
+	}
+
+
+	public JScrollPane getMarscroll() {
+		return marscroll;
+	}
+
+
+	public JPanel getJp() {
+		return jp;
+	}
+
+
+	public JPanel getBep() {
+		return bep;
+	}
+
+
+	public JPanel getMarp() {
+		return marp;
+	}
+
+
+	public JButton getTargetcity() {
+		return targetcity;
 	}
 	
 	

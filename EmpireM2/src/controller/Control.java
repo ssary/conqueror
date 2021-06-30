@@ -1,8 +1,10 @@
 package controller;
 
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.TextField;
@@ -21,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import buildings.EconomicBuilding;
 import buildings.*;
@@ -28,17 +31,21 @@ import engine.*;
 import exceptions.BuildingInCoolDownException;
 import exceptions.FriendlyCityException;
 import exceptions.FriendlyFireException;
+import exceptions.MaxCapacityException;
 import exceptions.MaxLevelException;
 import exceptions.MaxRecruitedException;
 import exceptions.NotEnoughGoldException;
 import exceptions.TargetNotReachedException;
+import units.Archer;
 import units.Army;
+import units.Cavalry;
+import units.Infantry;
 import units.Status;
 import units.Unit;
 import view.*;
 
 
-public class Control {
+public class Control implements ActionListener{
 	private int d =0 ;
 	
 	private Game game ;
@@ -75,8 +82,11 @@ public class Control {
 	private ActionListener barblistener ;
 	private ActionListener barulistener;
 	private ActionListener barrlistener;
-	private ActionListener stablerlistener , chooseunit , chooseunitdef;
+	private ActionListener stablerlistener , chooseunit , chooseunitdef , initiateListener,relocatelistener,targetcitylistener;
 	public int idxarmy ,idxdefarmy;
+	ArrayList<Army> idlearmies = new ArrayList<Army>();
+	ArrayList<Army> marchingarmies = new ArrayList<Army>();
+	ArrayList<Army> bearmies = new ArrayList<Army>();
 	public Control() throws IOException {
 		
 	// 					Starting window
@@ -251,12 +261,60 @@ public class Control {
 		money.setText("Money : " + player.getTreasury());
 		maincityview.add(money);
 		maincityview.repaint();
+		//maincityview.add(maincityview.getInitiatearmy());
+		//maincityview.add(maincityview.getRelocateunit());
+		
+		maincityview.getInitiatearmy().setVisible(true);
+		
+		
 		refreshmain();
 		refreshdefending(maincityview);
+		refreshmapview();
 		showMessageDialog(null, "You rectuited an archer !");
 		
 	}
+	public void lnkinitiate(MyFrame maincityview) {
+		String [] response = {"Archer Unit" , "Cavalry Unit" , "Infantry Unit"};
+		int choice = JOptionPane.showOptionDialog(null,
+				"Choose Unit to initiate army with ", "meows", JOptionPane.YES_NO_OPTION,
+				JOptionPane.PLAIN_MESSAGE, null, response, 0);
+		City city = new City(maincityview.getCityName());
+		for(City c : player.getControlledCities()) {
+			if(c.getName().equals(maincityview.getCityName())) {
+				city = c;
+			}
+		}
+		
+		
+		if(choice == 0) {
+			
+			System.out.println("kam unit : " + city.getDefendingArmy().getUnits().size());
+			for(int i =0 ; i < city.getDefendingArmy().getUnits().size();i++) {
 	
+				if(city.getDefendingArmy().getUnits().get(i) instanceof Archer) {
+					player.initiateArmy(city, city.getDefendingArmy().getUnits().get(i));
+					refreshdefending(maincityview);
+					showMessageDialog(null, "initiated an army with archer unit :D");
+				}
+			}
+			
+		}
+		else if(choice ==1 ) {
+			for(Unit a : city.getDefendingArmy().getUnits()) {
+				if(a instanceof Cavalry && a.getCurrentSoldierCount() !=0) {
+					player.initiateArmy(city, a);
+				}
+			}
+		}
+		else if(choice == 2) {
+			for(Unit a : city.getDefendingArmy().getUnits()) {
+				if(a instanceof Infantry) {
+					player.initiateArmy(city, a);
+				}
+			}
+		}
+		refreshmapview();
+	}
 	
 	public void lnkstableb(MyFrame maincityview) throws NotEnoughGoldException {
 		
@@ -356,7 +414,7 @@ public class Control {
 					player.upgradeBuilding(b);
 					money.setText(""+player.getTreasury());
 					maincityview.add(money);
-				    System.out.println("upgrade bar");
+				    //System.out.println("upgrade bar");
 					maincityview.getBarlvl().setText("LVL " + b.getLevel());
 					maincityview.add(maincityview.getBarlvl());
 					maincityview.getBar().setText("Upgrade " + b.getUpgradeCost());
@@ -470,10 +528,14 @@ public class Control {
 		spartaview.setVisible(false);
 		
 		choosecity.dispose();
-		lnkopenmainwindow();
-		
+		if(s.equals("Rome"))
+			lnkopenmainwindow(romeview);
+		else if(s.equals("Cairo"))
+			lnkopenmainwindow(cairoview);
+		else if(s.equals("Sparta"))
+			lnkopenmainwindow(spartaview);
 	}
-	public void lnkopenmainwindow()  {
+	public void lnkopenmainwindow(MyFrame maincityview)  {
 		
 		mainwindow = new MainWindow();
 		name.setText("Player : "+ player.getName() + " " +cityname);
@@ -490,7 +552,7 @@ public class Control {
 		viewcity(romeview);
 		viewcity(spartaview);
 		lnkMainWindow();
-		player.getControlledArmies().add(new Army(cityname) );
+		//player.getControlledArmies().add(new Army(cityname) );
 		/*try {
 		player.build("ArcheryRange", cityname);
 		player.getControlledCities().get(0).getMilitaryBuildings().get(0).setCoolDown(false);}
@@ -509,7 +571,7 @@ public class Control {
 
 			public void actionPerformed(ActionEvent e) {
 				try {
-					lnkendturn();
+					lnkendturn(maincityview);
 				} catch (TargetNotReachedException | FriendlyCityException | FriendlyFireException e1) {
 					
 					showMessageDialog(null, e1.getMessage());
@@ -551,6 +613,50 @@ public class Control {
 		mapview.getRome().addActionListener(viewcitylistener);
 		mapview.getSparta().addActionListener(viewcitylistener);
 		mapview.getBack().addActionListener(viewcitylistener);
+		
+		relocatelistener = new ActionListener() {
+
+			
+			public void actionPerformed(ActionEvent e) {
+				if(e.getSource() == mapview.getRelocatei()) {
+					try {
+						lnkrelocatei();
+					} catch (MaxCapacityException e1) {
+						
+						showMessageDialog(null, e1.getMessage());
+					}
+				}
+				else if(e.getSource() == mapview.getRelocateb()) {
+					try {
+						lnkrelocateb();
+					} catch (MaxCapacityException e1) {
+						
+						showMessageDialog(null, e1.getMessage());
+					}
+				}
+				else if(e.getSource() == mapview.getRelocatem()) {
+					try {
+						lnkrelocatem();
+					} catch (MaxCapacityException e1) {
+						
+						showMessageDialog(null, e1.getMessage());
+					}
+				}
+			}
+			
+		};
+		mapview.getRelocatei().addActionListener(relocatelistener);
+		
+		targetcitylistener = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				lnkcitytarget();
+				
+			}
+			
+		};
+		mapview.getTargetcity().addActionListener(targetcitylistener);
 	}
 	
 	
@@ -564,7 +670,7 @@ public class Control {
 		//}
 		
 		maincityview.add(maincityview.getDefending());
-		
+		maincityview.add(maincityview.getArmy());
 		
 		//				Back
 		backlistener = new ActionListener() {
@@ -773,7 +879,7 @@ public class Control {
 			    		stablerlistener = new ActionListener() {
 			    			public void actionPerformed(ActionEvent e) {
 			    				try {
-			    					lnkstabler(maincityview);
+			    					lnkstabler(maincityview);	
 			    				}catch (BuildingInCoolDownException e1) {
 			    					
 			    					showMessageDialog(null, e1.getMessage());
@@ -786,6 +892,37 @@ public class Control {
 			    				}
 			    		};
 			    		maincityview.getStabler().addActionListener(stablerlistener);
+			    		
+			    		
+			    		initiateListener = new ActionListener() {
+			    			public void actionPerformed(ActionEvent e) {
+			    				if(e.getSource() ==maincityview.getInitiatearmy())
+			    				lnkinitiate(maincityview);
+			    			}
+			    			
+			    		};
+			    		
+			    		maincityview.getInitiatearmy().addActionListener(initiateListener);
+	
+			    		
+			    		/*
+			    		relocatelistener = new ActionListener() {
+
+							
+							public void actionPerformed(ActionEvent e) {
+								if(e.getSource() == mapview.getRelocatei()) {
+									try {
+										lnkrelocatei();
+									} catch (MaxCapacityException e1) {
+										
+										showMessageDialog(null, e1.getMessage());
+									}
+								}
+							}
+			    			
+			    		};
+			    		mapview.getRelocatei().addActionListener(relocatelistener);
+			    		*/
 	}
 
 	public Game getGame() {
@@ -812,6 +949,191 @@ public class Control {
 		mainwindow.repaint();
 		
 	}
+	public void lnkcitytarget() {
+		String [] response = {"Idle" , "besiege" , "marching"};
+		String [] cityres = {"Cairo","Rome","Sparta"};
+		int choice = JOptionPane.showOptionDialog(null,
+				"which type of army", "meows", JOptionPane.YES_NO_OPTION,
+				JOptionPane.PLAIN_MESSAGE, null, response, 0);
+		int idxarmy =0;
+		if(choice == 0) {
+			idxarmy = Integer.parseInt(JOptionPane.showInputDialog("index of the army to send"));
+			
+			Army toarmy = idlearmies.get(idxarmy);
+			
+			int c2 = JOptionPane.showOptionDialog(null,
+					"which city to target", "meows", JOptionPane.YES_NO_OPTION,
+					JOptionPane.PLAIN_MESSAGE, null, cityres, 0);
+			if(c2==0)
+				game.targetCity(toarmy, "Cairo");
+			else if(c2 == 1)
+				game.targetCity(toarmy, "Rome");
+			else if(c2 == 2)
+				game.targetCity(toarmy, "Sparta");
+		}
+		
+		else if(choice ==1) {
+idxarmy = Integer.parseInt(JOptionPane.showInputDialog("index of the army to send"));
+			
+			Army toarmy = bearmies.get(idxarmy);
+			
+			int c2 = JOptionPane.showOptionDialog(null,
+					"which city to target", "meows", JOptionPane.YES_NO_OPTION,
+					JOptionPane.PLAIN_MESSAGE, null, cityres, 0);
+			if(c2==0)
+				game.targetCity(toarmy, "Cairo");
+			else if(c2 == 1)
+				game.targetCity(toarmy, "Rome");
+			else if(c2 == 2)
+				game.targetCity(toarmy, "Sparta");
+		}
+		
+		else if(choice ==2) {
+idxarmy = Integer.parseInt(JOptionPane.showInputDialog("index of the army to send"));
+			
+			Army toarmy = marchingarmies.get(idxarmy);
+			
+			int c2 = JOptionPane.showOptionDialog(null,
+					"which city to target", "meows", JOptionPane.YES_NO_OPTION,
+					JOptionPane.PLAIN_MESSAGE, null, cityres, 0);
+			if(c2==0)
+				game.targetCity(toarmy, "Cairo");
+			else if(c2 == 1)
+				game.targetCity(toarmy, "Rome");
+			else if(c2 == 2)
+				game.targetCity(toarmy, "Sparta");
+		}
+	}
+	
+	
+	public void lnkrelocatei() throws MaxCapacityException {
+		JTextField t = new JTextField();
+		t.setSize(100 , 20);
+		String [] response = {"Idle" , "besiege" , "marching"};
+
+		int idxfrom = Integer.parseInt(JOptionPane.showInputDialog("index of army to relocate from"));
+		int idxunitfrom = Integer.parseInt(JOptionPane.showInputDialog("index of unit to relocate from"));
+		int choice = JOptionPane.showOptionDialog(null,
+				"which type of army to ", "meows", JOptionPane.YES_NO_OPTION,
+				JOptionPane.PLAIN_MESSAGE, null, response, 0);
+		int idxto =0 ;
+		if(choice == 0) {
+			idxto = Integer.parseInt(JOptionPane.showInputDialog("index of the army to relocate to"));
+			
+			Army toarmy = idlearmies.get(idxto);
+			
+			Unit fromunit = idlearmies.get(idxfrom).getUnits().get(idxunitfrom);
+			toarmy.relocateUnit(fromunit);
+			showMessageDialog(null, "you relocated unit from idle to idle");
+		}
+		
+		else if(choice == 1) {
+			idxto = Integer.parseInt(JOptionPane.showInputDialog("index of the army to relocate to"));
+			
+			Army toarmy = bearmies.get(idxto);
+			
+			Unit fromunit = idlearmies.get(idxfrom).getUnits().get(idxunitfrom);
+			toarmy.relocateUnit(fromunit);
+			showMessageDialog(null, "you relocated unit from idle to besiege");
+		}
+		else if(choice ==2) {
+			idxto = Integer.parseInt(JOptionPane.showInputDialog("index of the army to relocate to"));
+			
+			Army toarmy = marchingarmies.get(idxto);
+			
+			Unit fromunit = idlearmies.get(idxfrom).getUnits().get(idxunitfrom);
+			toarmy.relocateUnit(fromunit);
+			showMessageDialog(null, "you relocated unit from idle to marching");
+		}
+		
+		refreshmapview();
+	}
+	
+	public void lnkrelocateb() throws MaxCapacityException {
+		JTextField t = new JTextField();
+		t.setSize(100 , 20);
+		String [] response = {"Idle" , "besiege" , "marching"};
+
+		int idxfrom = Integer.parseInt(JOptionPane.showInputDialog("index of army to relocate from"));
+		int idxunitfrom = Integer.parseInt(JOptionPane.showInputDialog("index of unit to relocate from"));
+		int choice = JOptionPane.showOptionDialog(null,
+				"which type of army to ", "meows", JOptionPane.YES_NO_OPTION,
+				JOptionPane.PLAIN_MESSAGE, null, response, 0);
+		int idxto =0 ;
+		if(choice == 0) {
+			idxto = Integer.parseInt(JOptionPane.showInputDialog("index of the army to relocate to"));
+			
+			Army toarmy = idlearmies.get(idxto);
+			
+			Unit fromunit = bearmies.get(idxfrom).getUnits().get(idxunitfrom);
+			toarmy.relocateUnit(fromunit);
+			showMessageDialog(null, "you relocated unit from siege to idle");
+		}
+		
+		else if(choice == 1) {
+			idxto = Integer.parseInt(JOptionPane.showInputDialog("index of the army to relocate to"));
+			
+			Army toarmy = bearmies.get(idxto);
+			
+			Unit fromunit = idlearmies.get(idxfrom).getUnits().get(idxunitfrom);
+			toarmy.relocateUnit(fromunit);
+			showMessageDialog(null, "you relocated unit from siege to besiege");
+		}
+		else if(choice ==2) {
+			idxto = Integer.parseInt(JOptionPane.showInputDialog("index of the army to relocate to"));
+			
+			Army toarmy = marchingarmies.get(idxto);
+			
+			Unit fromunit = idlearmies.get(idxfrom).getUnits().get(idxunitfrom);
+			toarmy.relocateUnit(fromunit);
+			showMessageDialog(null, "you relocated unit from siege to marching");
+		}
+		
+		refreshmapview();
+	}
+	
+	public void lnkrelocatem() throws MaxCapacityException {
+		JTextField t = new JTextField();
+		t.setSize(100 , 20);
+		String [] response = {"Idle" , "besiege" , "marching"};
+
+		int idxfrom = Integer.parseInt(JOptionPane.showInputDialog("index of army to relocate from"));
+		int idxunitfrom = Integer.parseInt(JOptionPane.showInputDialog("index of unit to relocate from"));
+		int choice = JOptionPane.showOptionDialog(null,
+				"which type of army to ", "meows", JOptionPane.YES_NO_OPTION,
+				JOptionPane.PLAIN_MESSAGE, null, response, 0);
+		int idxto =0 ;
+		if(choice == 0) {
+			idxto = Integer.parseInt(JOptionPane.showInputDialog("index of the army to relocate to"));
+			
+			Army toarmy = idlearmies.get(idxto);
+			
+			Unit fromunit = marchingarmies.get(idxfrom).getUnits().get(idxunitfrom);
+			toarmy.relocateUnit(fromunit);
+			showMessageDialog(null, "you relocated unit from marching to idle");
+		}
+		
+		else if(choice == 1) {
+			idxto = Integer.parseInt(JOptionPane.showInputDialog("index of the army to relocate to"));
+			
+			Army toarmy = bearmies.get(idxto);
+			
+			Unit fromunit = idlearmies.get(idxfrom).getUnits().get(idxunitfrom);
+			toarmy.relocateUnit(fromunit);
+			showMessageDialog(null, "you relocated unit from marching to besiege");
+		}
+		else if(choice ==2) {
+			idxto = Integer.parseInt(JOptionPane.showInputDialog("index of the army to relocate to"));
+			
+			Army toarmy = marchingarmies.get(idxto);
+			
+			Unit fromunit = idlearmies.get(idxfrom).getUnits().get(idxunitfrom);
+			toarmy.relocateUnit(fromunit);
+			showMessageDialog(null, "you relocated unit from marching to marching");
+		}
+		
+		refreshmapview();
+	}
 	public void lnkback() {
 		mapview.setVisible(false);
 	}
@@ -820,21 +1142,44 @@ public class Control {
 		maincityview.setVisible(false);
 	}
 	
-	public void lnkendturn() throws TargetNotReachedException, FriendlyCityException, FriendlyFireException {
+	public void lnkendturn(MyFrame maincityview) throws TargetNotReachedException, FriendlyCityException, FriendlyFireException {
 		
 		
 		game.endTurn();
-		
+		if(game.getCurrentTurnCount() == 51) {
+			if(player.getControlledCities().size() == 3) {
+				showMessageDialog(null,"You won wooo" );
+			}
+			else
+				showMessageDialog(null,"LOST" );
+			mainwindow.dispose();
+		}
+		if(player.getControlledCities().size() == 3) {
+			showMessageDialog(null,"You won wooo" );
+			maincityview.dispose();
+		}
 		String []response = {"Attack defending army" , "Lay Siege the city" }; 
 		for(Army a : player.getControlledArmies()) {
 			for(City city : game.getAvailableCities()) {
 				if(a.getCurrentLocation().equals(city.getName()) && !player.getControlledCities().contains(city)) {
 					battleview = new BattleView();
+					ActionListener b = new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							battleview.setVisible(false);
+							
+						}
+						
+					};
+					battleview.getBack().addActionListener(b);
+					battleview.add(battleview.getBack());
+					
 					String mess =  "Your army reached " + a.getTarget() + "what now ?"; 
 					int choice = JOptionPane.showOptionDialog(null, mess, "secret", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, response, 0);
-					System.out.println(choice);
+					//System.out.println(choice);
 					if(choice == 0 ) {
-						autoOrAttack(a , city.getDefendingArmy(),1);
+						autoOrAttack(a , city.getDefendingArmy(),true);
 					}
 					else if(choice == 1) {
 						player.laySiege(a, city);
@@ -844,16 +1189,17 @@ public class Control {
 		}
 		
 		refreshmain();
+		refreshdefending(maincityview);
 		
 	}
 	
-	public void autoOrAttack(Army attacker , Army defender , int t) throws FriendlyFireException {
+	public void autoOrAttack(Army attacker , Army defender , boolean t) throws FriendlyFireException{
 		
-		int turns =t ;
+		boolean turns =t ;
 		String [] response  ={"Attack manually" , "Random choose of 2 units" } ;
 		int choice = JOptionPane.showOptionDialog(null, "Attacking defending army", "secret", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, response, 0);
 		if(choice == 0) {
-			while (attacker.getUnits().size() != 0 && defender.getUnits().size() != 0) {
+			//while (attacker.getUnits().size() != 0 && defender.getUnits().size() != 0) {
 			ArrayList<String> myarmy = new ArrayList <String>();
 			ArrayList<Unit> myarmyunits = new ArrayList<Unit>();
 			ArrayList<String> defarmy = new ArrayList <String>();
@@ -877,14 +1223,15 @@ public class Control {
 				defarmy.add(add);
 			}
 			
-			
+			System.out.println("aa");
 			String[] myarmyarray = myarmy.toArray(new String[0]);
 			String[] defarmyarray = defarmy.toArray(new String[0]);
 			
-			JComboBox myarmyCombo = new JComboBox(myarmyarray);
-			JComboBox defarmyCombo = new JComboBox(defarmyarray);
+			JComboBox<String> myarmyCombo = new JComboBox<String>(myarmyarray);
+			JComboBox<String> defarmyCombo = new JComboBox<String>(defarmyarray);
 			
 			idxarmy = idxdefarmy = -1;
+			
 			chooseunit = new ActionListener () {
 				public void actionPerformed(ActionEvent e) {
 					if(e.getSource() == myarmyCombo) {
@@ -899,31 +1246,35 @@ public class Control {
 			};
 			
 			myarmyCombo.addActionListener(chooseunit);
-			defarmyCombo.addActionListener(chooseunit);
+			//idxarmy = myarmyCombo.getSelectedIndex();
+			//defarmyCombo.addActionListener(this);
+			battleview.add(myarmyCombo);
 			// defending mbydrbsh :< || el lost units mbtzhrsh || ellog ele btwarek men bydrb men
 			int bef = 0 ;
 			int aft = 0 ;
 			if(idxarmy != -1 && idxdefarmy != -1) {
-				if(turns == 1) {
+				System.out.println("idx ");
+				if(turns) {
 					bef = defender.getUnits().get(idxarmy).getCurrentSoldierCount();
 				attacker.getUnits().get(idxarmy).attack(defender.getUnits().get(idxdefarmy));
 				aft = defender.getUnits().get(idxarmy).getCurrentSoldierCount() ;
-				showMessageDialog(null,"Gamed ya " +player.getName()+ " defending lost " + (bef-aft) + " units");
+				showMessageDialog(null,"Gamed ya " +player.getName()+ " defending army lost " + (bef-aft) + " units  " +aft );
 				}
 				else {
 					bef = attacker.getUnits().get(idxarmy).getCurrentSoldierCount();
 					defender.getUnits().get(idxarmy).attack(attacker.getUnits().get(idxdefarmy));
 					aft = attacker.getUnits().get(idxarmy).getCurrentSoldierCount() ;
-					showMessageDialog(null, " you lost " + (bef-aft) + " units");
+					showMessageDialog(null, " you lost " + (bef-aft) + " units" + "  " + aft);
 				}
 				
 			}
 			
-			}
 			
-			if(attacker.getUnits().size() != 0) {
-				game.occupy(attacker, cityname);
+			
+			if(defender.getUnits().size() == 0) {
 				showMessageDialog(null,"You won the battle woho !");
+				game.occupy(attacker, cityname);
+				
 			}
 			else
 				showMessageDialog(null,"You lost the battle :(");
@@ -945,30 +1296,31 @@ public class Control {
 	public void refreshdefending(MyFrame maincityview) {
 		String city = maincityview.getCityName();
 		//ArrayList<String> units = new ArrayList<String>();
-        DefaultListModel<String> units = new DefaultListModel<>();  
-        DefaultListModel<String> unitsarmy = new DefaultListModel<>();  
+		String defunits = "" , armyunits = ""; 
         maincityview.getDefending().setEditable(false);
+        String add = "";
 		for(City c : player.getControlledCities()) {
 			if(c.getName().equals(city)) {
 
 				
 				for(Unit u : c.getDefendingArmy().getUnits()) {
+					System.out.println("dsads");
 					String[] s =u.getClass().toString().split("\\."); 
-						String add = "";
+						
 						add += "Unit " + s[1] +" | ";
 						add += "Level" + u.getLevel() + " | ";
 						add += "Current soldier count : " + u.getCurrentSoldierCount() + " | "
-								+ "\n\n";
-					
-						units.addElement(add);
+								+ "\n";
+						
+						
 					
 				}
-				
+				defunits += add;
 				
 			}
 		}
 		int i =1 ;
-		String add = "";
+		add = "";
 		for(Army a : player.getControlledArmies()) {
 			if(a.getCurrentLocation().equals(city)) {
 				add += "army " + i;
@@ -978,28 +1330,128 @@ public class Control {
 						
 						add += "Unit " + s[1] +" | ";
 						add += "Level" + u.getLevel() + " | ";
-						add += "Current soldier count : " + u.getCurrentSoldierCount() + " | ";
+						add += "Current soldier count : " + u.getCurrentSoldierCount() + " | \n";
 						
-						unitsarmy.addElement(add);
+						
 				}
 				
 				
 			}
 		}
 		
+		armyunits += add;
+		
+		maincityview.getDefendingtext().setText(defunits);
+		maincityview.getCityarmy().setText(armyunits);
+		
+		//maincityview.getdefscroll().setViewportView(maincityview.getDefendingtext());
+		/*
+		JTextArea ta = new JTextArea();
+		ta.setEditable(false);
+		ta.setLineWrap(true);
+		ta.setBorder(null);
+		
+		ta.setText(add);
+		//ta.setFont(new Font(ta.getFont().getName(),Font.BOLD,25));
+		ta.setSize(ta.getPreferredSize().width * 10 , ta.getPreferredSize().height);
+		ta.setBounds(800,100,ta.getSize().width,ta.getSize().height);
+		
+		maincityview.add(ta);
+		
 		JList<String> list = new JList<>(units); 
 		JList<String> listarmy = new JList<>(unitsarmy); 
-		list.setBounds(800,100, list.getPreferredSize().width + 20,list.getPreferredSize().height );
+		list.setBounds(800,100, list.getPreferredSize().width + 2,list.getPreferredSize().height );
 		
 		listarmy.setBounds(list.getX() +list.getPreferredSize().width + 20 ,100, listarmy.getPreferredSize().width + 20,listarmy.getPreferredSize().height);
+
 		maincityview.setDeflist(list);
 		maincityview.setArmylist(listarmy);
-		maincityview.add(list);
-		maincityview.add(listarmy);
+		maincityview.remove(maincityview.getDeflist());
+		maincityview.remove(maincityview.getArmylist());
+		maincityview.getDeflist().setVisible(false);
+		*/
+		//maincityview.add(list);
+		//maincityview.add(listarmy);
+		
 		maincityview.repaint();
 	}
 	
 	
+	public void refreshmapview() {
+		
+		String ad = "my Idle Armies:\n";
+		String besiege ="my Besiege Armies:\n";
+		String marching ="my Marching Armies:\n";
+		ArrayList<Army> army = player.getControlledArmies();
+		int i =0 ;
+		
+		for(Army a : army) {
+			if(a.getCurrentStatus()==Status.IDLE) {
+			
+			ad+= "Army" + i + "\n";
+			int m = 1;
+			for(Unit u : a.getUnits()) {
+				ad += "Unit " + m +"\n";
+				ad += "Level" + u.getLevel() + "\n";
+				ad += "Current soldier count : " + u.getCurrentSoldierCount() + "\n";
+			m ++ ;}
+			i ++ ;
+			idlearmies.add(a);
+			}
+			i =0 ;
+			if(a.getCurrentStatus()==Status.BESIEGING) {
+				besiege+= "Army" + i + "\n";
+				besiege += "Besieged City : " + a.getCurrentLocation() + "\n";
+				
+				int turnsunder =0 ;				
+				for(City c : game.getAvailableCities()) {
+					if(c.getName().equals(a.getCurrentLocation()))
+						turnsunder = c.getTurnsUnderSiege();
+				}
+				besiege += "Turns under Siege : " + turnsunder + "\n";
+				
+				int m = 1;
+				for(Unit u : a.getUnits()) {
+					besiege += "Unit " + m +"\n";
+					besiege += "Level" + u.getLevel() + "\n";
+					besiege += "Current soldier count : " + u.getCurrentSoldierCount() + "\n";
+				m ++ ;}
+				i ++ ;
+				bearmies.add(a);
+			}
+			i=0;
+			if(a.getCurrentStatus()==Status.MARCHING) {
+				marching+= "Army" + i + "\n";
+				marching += "Target : " + a.getTarget() +"\n";
+				marching += "Turns left : " + a.getDistancetoTarget() + "\n" ;
+				
+				int m = 1;
+				for(Unit u : a.getUnits()) {
+					marching += "Unit " + m +"\n";
+					marching += "Level" + u.getLevel() + "\n";
+					marching += "Current soldier count : " + u.getCurrentSoldierCount() + "\n";
+				m ++ ;}
+				i ++ ;
+				marchingarmies.add(a);
+			}
+		}
+		mapview.getJ().setText(ad);
+		mapview.getJ().setFont(new Font(mapview.getJ().getFont().getName(),Font.BOLD,25));
+		//mapview.getJ().setSize(mapview.getJ().getPreferredSize().width , mapview.getJ().getPreferredSize().height);
+		//mapview.getJ().setBounds(0,0,mapview.getJ().getSize().width,mapview.getJ().getSize().height);
+		
+		mapview.getMar().setText(marching);
+		mapview.getMar().setFont(new Font(mapview.getMar().getFont().getName(),Font.BOLD,20));
+		mapview.getMar().setSize(mapview.getMar().getPreferredSize().width , mapview.getMar().getPreferredSize().height);
+		mapview.getMar().setBounds(150,0,mapview.getMar().getSize().width,mapview.getMar().getSize().height);
+		
+		
+		mapview.getBe().setText(besiege);
+		mapview.getBe().setFont(new Font(mapview.getBe().getFont().getName(),Font.BOLD,20));
+		mapview.getBe().setSize(mapview.getBe().getPreferredSize().width , mapview.getBe().getPreferredSize().height);
+		mapview.getBe().setBounds(300,0,mapview.getBe().getSize().width,mapview.getBe().getSize().height);
+		mapview.repaint();
+	}
 	public ArrayList<Army> getIdleArmy() {
 		return player.getControlledArmies();
 	}
@@ -1026,6 +1478,13 @@ public class Control {
 
 	public String getCityname() {
 		return cityname;
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

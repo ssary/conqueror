@@ -13,9 +13,7 @@ public class MainWindow extends JFrame{
 	JLabel name ;
 	JButton map;
 	JButton endturn;
-	JButton initiatearmy;
-	JButton relocateunit ;
-	JButton targetcity ;
+
 	
 	public MainWindow() {
 		super();
@@ -31,18 +29,11 @@ public class MainWindow extends JFrame{
 		map = new JButton();
 		endturn = new JButton();
 		endturn.setText("End Turn");
-		initiatearmy = new JButton();
-		relocateunit = new JButton();
-		targetcity = new JButton();
+		
 		endturn.setSize(endturn.getPreferredSize().width , endturn.getPreferredSize().height);
 		map.setText("World Map");
 		map.setSize(map.getPreferredSize().width , map.getPreferredSize().height);
-		initiatearmy.setText("Initiate Army");
-		initiatearmy.setSize(initiatearmy.getPreferredSize().width , initiatearmy.getPreferredSize().height);
-		relocateunit.setText("Relocate Unit");
-		relocateunit.setSize(relocateunit.getPreferredSize().width , relocateunit.getPreferredSize().height);
-		targetcity.setText("Target city");
-		targetcity.setSize(targetcity.getPreferredSize().width , targetcity.getPreferredSize().height);
+		
 		
 		
 		setVisible(true);
@@ -52,9 +43,7 @@ public class MainWindow extends JFrame{
 		add(name);
 		add(map);
 		add(endturn);
-		add(initiatearmy);
-		add(relocateunit);
-		add(targetcity);
+
 		
 		
 	}

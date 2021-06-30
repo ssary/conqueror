@@ -17,7 +17,9 @@ import units.Unit;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -29,11 +31,13 @@ public class MyFrame extends JFrame {
 	JButton farm, market , bar,archer, stable ,barr,stabler,archerr,farmb,marketb,barb,stableb,archerb,back;
 	JLabel farml,marl,barl,arl,stal, farmlvl , archerlvl ,marketlvl , stablelvl , barlvl;
 	String cityName;
-	JPanel defpanel;
+	JPanel defpanel , cityarmypanel;
 	JList deflist;
 	JList armylist;
 	ImageIcon  marketp,archerp,barracksp,stablep;
-
+	JButton initiatearmy;
+	JButton relocateunit ;
+	
 	JLabel marketpicture,stablepicture,barpicture,archerpicture ;
 	public JList getArmylist() {
 		return armylist;
@@ -51,14 +55,28 @@ public class MyFrame extends JFrame {
 	int buildcostfarm,buildcostmarket ;
 	ImageIcon myPicture;
 	JLabel farmpicture ;
-	JTextArea defending ,army;
+	JTextArea defending ,army , defendingtext , cityarmy ;
 	JTextArea area = new JTextArea();
-	
+	JScrollPane defscroll , cityarmyscroll;
 	
 	public MyFrame(String cityName){
+		  this.setResizable(false);
+		  this.setSize(1400,1000);
+		  this.setVisible(true);
+		  this.setLayout(null);
+		initiatearmy = new JButton();
+		relocateunit = new JButton();
 		
-
-		 
+		
+		initiatearmy.setText("Initiate Army");
+		initiatearmy.setSize(initiatearmy.getPreferredSize().width , initiatearmy.getPreferredSize().height);
+		relocateunit.setText("Relocate Unit");
+		relocateunit.setSize(relocateunit.getPreferredSize().width , relocateunit.getPreferredSize().height);
+		//targetcity.setText("Target city");
+		//targetcity.setSize(targetcity.getPreferredSize().width , targetcity.getPreferredSize().height);
+		initiatearmy.setBounds(200,0,initiatearmy.getSize().width,initiatearmy.getSize().height);  
+		
+		
 		  marketpicture= new JLabel();
 		  archerpicture= new JLabel();
 		  barpicture= new JLabel();
@@ -82,7 +100,7 @@ public class MyFrame extends JFrame {
 		defending.setBorder(null);
 		defending.setText("Defending Army \n");
 		defending.setSize(defending.getPreferredSize().width , defending.getPreferredSize().height);
-		defending.setBounds(800 , 20,
+		defending.setBounds(750 , 20,
 				defending.getSize().width, defending.getSize().height);
 		
 		army = new JTextArea();
@@ -91,16 +109,43 @@ public class MyFrame extends JFrame {
 		army.setBorder(null);
 		army.setText("Army in the city \n");
 		army.setSize(army.getPreferredSize().width , army.getPreferredSize().height);
-		army.setBounds(800 , 20,
-				army.getSize().width, army.getSize().height);
+		army.setBounds(1100 , 20,
+		army.getSize().width, army.getSize().height);
 		deflist = new JList();
-		defpanel = new JPanel();
 		
-		  this.setResizable(false);
-		  this.setSize(1400,1000);
-		  this.setVisible(true);
-		  this.setLayout(null);
-		 //-------------------------------------------------------------------------------------------
+		cityarmy = new JTextArea();
+		cityarmy.setEditable(false);
+		cityarmypanel = new JPanel();
+		cityarmypanel.setLayout(new GridLayout(2,4));
+		cityarmypanel.setSize(300, 600);
+		cityarmypanel.setBounds(1050,100 ,300 , 600);
+		
+		cityarmyscroll = new JScrollPane(cityarmy , JScrollPane.VERTICAL_SCROLLBAR_ALWAYS ,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS );
+		cityarmyscroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black)));
+		cityarmyscroll.setBounds(1050,100 , 300 , 600);
+		cityarmyscroll.setViewportView(cityarmy);
+		
+		cityarmypanel.add(cityarmyscroll);
+		add(cityarmypanel);
+
+		
+		//----------------------------------------------------------
+		defendingtext = new JTextArea();
+		defendingtext.setEditable(false);
+		defpanel = new JPanel();
+		defpanel.setLayout(new GridLayout(2,4));
+		defpanel.setSize(300, 700);
+		defpanel.setBounds(750,100 ,300 , 600);
+		
+		defscroll = new JScrollPane(defendingtext , JScrollPane.VERTICAL_SCROLLBAR_ALWAYS ,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS );
+		defscroll.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black)));
+		defscroll.setBounds(750,100 , 300 , 600);
+		defscroll.setViewportView(defendingtext);
+		
+		defpanel.add(defscroll);
+		add(defpanel); 
+		
+		//-------------------------------------------------------------------------------------------
 		  farml= new JLabel();
 		  myPicture = new ImageIcon("farm.png");
 		  farmpicture = new JLabel();
@@ -322,6 +367,8 @@ public class MyFrame extends JFrame {
 				 archerb .setBounds(250,450,150,50);  
 				 barr.setBounds(0,520,150,50);
 				  archerr .setBounds(250,520,150,50);  
+				  add(initiatearmy);
+				  initiatearmy.setVisible(false);
 	}
 	
 	
@@ -563,6 +610,44 @@ public class MyFrame extends JFrame {
 
 		public JTextArea getArea() {
 			return area;
+		}
+
+
+		public JButton getInitiatearmy() {
+			return initiatearmy;
+		}
+
+
+		public JButton getRelocateunit() {
+			return relocateunit;
+		}
+
+
+		public JTextArea getDefendingtext() {
+			return defendingtext;
+		}
+
+
+		
+
+
+		public JScrollPane getDefscroll() {
+			return defscroll;
+		}
+
+
+		public JPanel getCityarmypanel() {
+			return cityarmypanel;
+		}
+
+
+		public JTextArea getCityarmy() {
+			return cityarmy;
+		}
+
+
+		public JScrollPane getCityarmyscroll() {
+			return cityarmyscroll;
 		}
 		
 	

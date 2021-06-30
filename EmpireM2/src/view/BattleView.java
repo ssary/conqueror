@@ -6,7 +6,7 @@ import javax.swing.*;
 public class BattleView extends JFrame{
 
 	JButton back;
-	JComboBox myarmy , defendingarmy;
+	JComboBox<String> myarmy , defendingarmy;
 	
 	public BattleView () {
 		super();
@@ -15,7 +15,13 @@ public class BattleView extends JFrame{
 		this.setSize(1400,800);
 		this.setResizable(false);
 		setTitle("Battle");
+	 	back = new JButton();
+		back.setText("Back");
+		back.setFont(new Font(back.getFont().getName(),Font.BOLD,30));
+		back.setSize(back.getPreferredSize().width , back.getPreferredSize().height);
+		back.setBorder(null);
 		
+		this.setVisible(true);
 		
 	}
 
@@ -35,11 +41,11 @@ public class BattleView extends JFrame{
 		this.myarmy = myarmy;
 	}
 
-	public JComboBox getDefendingarmy() {
+	public JComboBox<String> getDefendingarmy() {
 		return defendingarmy;
 	}
 
-	public void setDefendingarmy(JComboBox defendingarmy) {
+	public void setDefendingarmy(JComboBox<String> defendingarmy) {
 		this.defendingarmy = defendingarmy;
 	}
 	
